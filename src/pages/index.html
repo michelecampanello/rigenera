@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Guida al riuso - Fondazione Rigenera</title>
   <meta name="description" content="Dove riparare, donare, scambiare o riciclare gli oggetti: la guida al riuso della Fondazione Rigenera.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,600;9..144,800&display=swap">
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/script.js" defer></script>
 </head>
@@ -28,9 +31,24 @@
 
   <main id="contenuto">
     <section class="intro">
-      <div class="contenitore">
-        <h1>Prima di buttarlo, dagli una seconda vita</h1>
-        <p class="intro__testo">Trova vicino a te dove <strong>riparare</strong>, <strong>donare</strong>, <strong>scambiare</strong> o <strong>riciclare</strong> correttamente i tuoi oggetti. Scegli cosa vuoi fare e la guida ti mostra solo i punti adatti.</p>
+      <div class="contenitore intro__riga">
+        <div>
+          <p class="intro__occhiello">Guida al riuso</p>
+          <h1>Prima di buttarlo, dagli una <span class="evidenzia">seconda vita</span></h1>
+          <p class="intro__testo">Trova vicino a te dove <strong>riparare</strong>, <strong>donare</strong>, <strong>scambiare</strong> o <strong>riciclare</strong> correttamente i tuoi oggetti. Scegli cosa vuoi fare e la guida ti mostra solo i punti adatti.</p>
+        </div>
+        <!-- Sigillo decorativo: nascosto ai lettori di schermo -->
+        <svg class="sigillo" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+          <defs>
+            <path id="sigillo-cerchio" d="M100,100 m-74,0 a74,74 0 1,1 148,0 a74,74 0 1,1 -148,0"/>
+          </defs>
+          <circle class="sigillo__fondo" cx="100" cy="100" r="97"/>
+          <circle class="sigillo__linea" cx="100" cy="100" r="54"/>
+          <g class="sigillo__giro">
+            <text class="sigillo__testo"><textPath href="#sigillo-cerchio" textLength="462">Riparare • Donare • Scambiare • Riciclare •</textPath></text>
+          </g>
+          <text class="sigillo__centro" x="100" y="102" text-anchor="middle" dominant-baseline="central">↻</text>
+        </svg>
       </div>
     </section>
 
