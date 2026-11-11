@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guida al riuso – Fondazione Rigenera</title>
+  <meta name="description" content="Dove riparare, donare, scambiare o riciclare gli oggetti: la guida al riuso della Fondazione Rigenera.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="salta" href="#risultati">Vai direttamente ai punti</a>
+
+  <header class="testata">
+    <div class="contenitore testata__riga">
+      <a class="logo" href="index.html" aria-label="Fondazione Rigenera, pagina iniziale">
+        <span class="logo__segno" aria-hidden="true">↻</span>
+        <span>Fondazione <strong>Rigenera</strong></span>
+      </a>
+      <nav aria-label="Menu principale">
+        <ul class="menu">
+          <li><a href="index.html" aria-current="page">Guida al riuso</a></li>
+          <li><a href="segnala.html">Segnala un punto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenuto">
+    <section class="intro">
+      <div class="contenitore">
+        <h1>Prima di buttarlo, dagli una seconda vita</h1>
+        <p class="intro__testo">Trova vicino a te dove <strong>riparare</strong>, <strong>donare</strong>, <strong>scambiare</strong> o <strong>riciclare</strong> correttamente i tuoi oggetti. Scegli cosa vuoi fare e la guida ti mostra solo i punti adatti.</p>
+      </div>
+    </section>
+
+    <div class="contenitore guida">
+
+      <!--
+        FILTRI
+        Sono normali pulsanti di scelta (radio) dentro un <form>:
+        - funzionano con mouse, dito e tastiera (Tab per spostarsi tra i gruppi, frecce per cambiare scelta);
+        - il pulsante "Azzera i filtri" è un reset nativo del browser, quindi non serve JavaScript;
+        - il filtraggio vero e proprio è fatto in style.css (sezione "FILTRI").
+      -->
+      <form class="filtri" aria-labelledby="titolo-filtri">
+        <h2 id="titolo-filtri" class="filtri__titolo">Cosa ti serve?</h2>
+
+        <fieldset class="gruppo">
+          <legend>Cosa vuoi fare</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="azione" id="az-tutte" checked><span>Tutto</span></label>
+            <label class="chip"><input type="radio" name="azione" id="az-ripara"><span>Riparare</span></label>
+            <label class="chip"><input type="radio" name="azione" id="az-dona"><span>Donare</span></label>
+            <label class="chip"><input type="radio" name="azione" id="az-scambia"><span>Scambiare o comprare usato</span></label>
+            <label class="chip"><input type="radio" name="azione" id="az-ricicla"><span>Riciclare</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="gruppo">
+          <legend>Che oggetto hai</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="categoria" id="cat-tutte" checked><span>Tutti</span></label>
+            <label class="chip"><input type="radio" name="categoria" id="cat-bici"><span>Bici</span></label>
+            <label class="chip"><input type="radio" name="categoria" id="cat-abbigliamento"><span>Vestiti e scarpe</span></label>
+            <label class="chip"><input type="radio" name="categoria" id="cat-elettronica"><span>Elettronica ed elettrodomestici</span></label>
+            <label class="chip"><input type="radio" name="categoria" id="cat-mobili"><span>Mobili</span></label>
+            <label class="chip"><input type="radio" name="categoria" id="cat-libri"><span>Libri e giochi</span></label>
+            <label class="chip"><input type="radio" name="categoria" id="cat-casa"><span>Casa e cucina</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="gruppo">
+          <legend>In che zona</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="zona" id="zona-tutte" checked><span>Tutte</span></label>
+            <label class="chip"><input type="radio" name="zona" id="zona-centro"><span>Centro</span></label>
+            <label class="chip"><input type="radio" name="zona" id="zona-nord"><span>Nord</span></label>
+            <label class="chip"><input type="radio" name="zona" id="zona-sud"><span>Sud</span></label>
+            <label class="chip"><input type="radio" name="zona" id="zona-est"><span>Est</span></label>
+            <label class="chip"><input type="radio" name="zona" id="zona-ovest"><span>Ovest</span></label>
+          </div>
+        </fieldset>
+
+        <button type="reset" class="bottone bottone--secondario">Azzera i filtri</button>
+      </form>
+
+      <section id="risultati" class="risultati" aria-labelledby="titolo-risultati" tabindex="-1">
+        <h2 id="titolo-risultati">Punti della guida</h2>
+
+        <!--
+          ============================================================
+          COME AGGIUNGERE O MODIFICARE UN PUNTO
+          ============================================================
+          1. Copia un blocco <li class="punto"> ... </li> intero (anche il modello qui sotto).
+          2. Incollalo dentro questo elenco, nella posizione che preferisci.
+          3. Modifica i testi e i tre attributi "data-":
+               data-azione    → uno o più tra: ripara dona scambia ricicla
+               data-categoria → uno o più tra: bici abbigliamento elettronica mobili libri casa
+               data-zona      → uno solo tra: centro nord sud est ovest
+             Se ci sono più valori, separali con uno spazio (es. data-azione="ripara dona").
+          4. Fai lo stesso con le etichette visibili (<li class="etichetta ...">) così chi legge vede le stesse informazioni.
+          5. Per eliminare un punto, cancella il suo blocco <li class="punto"> ... </li>.
+
+          MODELLO DA COPIARE:
+
+          <li class="punto" data-azione="ripara" data-categoria="bici" data-zona="centro">
+            <article class="scheda" aria-labelledby="p-nome-univoco">
+              <h3 id="p-nome-univoco">Nome del punto</h3>
+              <ul class="etichette" aria-label="Cosa puoi fare e quali oggetti">
+                <li class="etichetta etichetta--ripara">Riparare</li>
+                <li class="etichetta">Bici</li>
+              </ul>
+              <p class="scheda__descrizione">Breve descrizione, una o due frasi.</p>
+              <dl class="scheda__info">
+                <div><dt>Zona</dt><dd>Centro</dd></div>
+                <div><dt>Indirizzo</dt><dd>Via Esempio 1</dd></div>
+                <div><dt>Orari</dt><dd>Lun–Ven 9:00–12:00</dd></div>
+              </dl>
+            </article>
+          </li>
+          ============================================================
+        -->
+
+        <ol class="elenco" role="list">
+
+          <li class="punto" data-azione="ripara" data-categoria="bici" data-zona="nord">
+            <article class="scheda" aria-labelledby="p-raggi-liberi">
+              <h3 id="p-raggi-liberi">Ciclofficina Raggi Liberi</h3>
+              <ul class="etichette" aria-label="Cosa puoi fare e quali oggetti">
+                <li class="etichetta etichetta--ripara">Riparare</li>
+                <li class="etichetta">Bici</li>
+              </ul>
+              <p class="scheda__descrizione">Officina popolare dove volontari esperti ti aiutano a riparare la tua bici da solo, con attrezzi e pezzi di recupero a disposizione.</p>
+              <dl class="scheda__info">
+                <div><dt>Zona</dt><dd>Nord</dd></div>
+                <div><dt>Indirizzo</dt><dd>Via dei Mulini 14</dd></div>
+                <div><dt>Orari</dt><dd>Mar e Gio 17:00–20:00, Sab 10:00–13:00</dd></div>
+              </dl>
+            </article>
+          </li>
+
+          <li class="punto" data-azione="ripara" data-categoria="elettronica casa" data-zona="centro">
+            <article class="scheda" aria-labelledby="p-repair-cafe">
+              <h3 id="p-repair-cafe">Repair Café di Quartiere</h3>
+              <ul class="etichette" aria-label="Cosa puoi fare e quali oggetti">
+                <li class="etichetta etichetta--ripara">Riparare</li>
+                <li class="etichetta">Elettronica ed elettrodomestici</li>
+                <li class="etichetta">Casa e cucina</li>
+              </ul>
+              <p class="scheda__descrizione">Un pomeriggio al mese per riparare insieme piccoli elettrodomestici, lampade, radio e oggetti di casa. Ingresso libero.</p>
+              <dl class="scheda__info">
+                <div><dt>Zona</dt><dd>Centro</dd></div>
+                <div><dt>Indirizzo</dt><dd>Piazza della Pace 3, sala civica</dd></div>
+                <div><dt>Orari</dt><dd>Primo sabato del mese, 15:00–18:00</dd></div>
+              </dl>
+            </article>
+          </li>
+
+          <li class="punto" data-azione="dona" data-categoria="abbigliamento casa libri" data-zona="sud">
+            <article class="scheda" aria-labelledby="p-emporio">
+              <h3 id="p-emporio">Emporio Solidale</h3>
+              <ul class="etichette" aria-label="Cosa puoi fare e quali oggetti">
+                <li class="etichetta etichetta--dona">Donare</li>
+                <li class="etichetta">Vestiti e scarpe</li>
+                <li class="etichetta">Casa e cucina</li>
+                <li class="etichetta">Libri e giochi</li>
+              </ul>
+              <p class="scheda__descrizione">Raccoglie vestiti puliti, stoviglie, biancheria e giocattoli in buono stato e li distribuisce alle famiglie in difficoltà.</p>
+              <dl class="scheda__info">
+                <div><dt>Zona</dt><dd>Sud</dd></div>
+                <div><dt>Indirizzo</dt><dd>Via Garibaldi 88</dd></div>
+                <div><dt>Orari</dt><dd>Lun–Ven 9:00–12:30</dd></div>
+              </dl>
+            </article>
+          </li>
+
+          <li class="punto" data-azione="scambia" data-categoria="abbigliamento" data-zona="centro">
+            <article class="scheda" aria-labelledby="p-armadio">
+              <h3 id="p-armadio">Armadio Comune – swap party</h3>
+              <ul class="etichette" aria-label="Cosa puoi fare e quali oggetti">
+                <li class="etichetta etichetta--scambia">Scambiare</li>
+                <li class="etichetta">Vestiti e scarpe</li>
+              </ul>
+              <p class="scheda__descrizione">Porta fino a 10 capi che non metti più e scegli qualcosa di nuovo per te. I capi non scambiati vengono donati.</p>
+              <dl class="scheda__info">
+                <div><dt>Zona</dt><dd>Centro</dd></div>
+                <div><dt>Indirizzo</dt><dd>Biblioteca civica, Via Roma 21</dd></div>
+                <div><dt>Orari</dt><dd>Ultima domenica del mese, 10:00–13:00</dd></div>
+              </dl>
+            </article>
+          </li>
+
+          <li class="punto" data-azione="ricicla" data-categoria="elettronica mobili casa" data-zona="est">
+            <article class="scheda" aria-labelledby="p-raccolta-est">
+              <h3 id="p-raccolta-est">Centro di raccolta comunale Est</h3>
+              <ul class="etichette" aria-label="Cosa puoi fare e quali oggetti">
+                <li class="etichetta etichetta--ricicla">Riciclare</li>
+                <li class="etichetta">Elettronica ed elettrodomestici</li>
+                <li class="etichetta">Mobili</li>
+                <li class="etichetta">Casa e cucina</li>
+              </ul>
+              <p class="scheda__descrizione">Qui si portano rifiuti ingombranti, elettrodomestici e apparecchi elettronici (RAEE) non più riparabili. Gratuito per i residenti, porta un documento.</p>
+              <dl class="scheda__info">
+                <div><dt>Zona</dt><dd>Est</dd></div>
+                <div><dt>Indirizzo</dt><dd>Via dell'Industria 5</dd></div>
+                <div><dt>Orari</dt><dd>Lun–Sab 8:00–12:00, Mer anche 14:00–17:00</dd></div>
+              </dl>
+            </article>
+          </li>
+
+          <li class="punto" data-azione="scambia dona" data-categoria="mobili casa libri" data-zona="ovest">
+            <article class="scheda" aria-labelledby="p-mercatino">
+              <h3 id="p-mercatino">Mercatino Seconda Mano</h3>
+              <ul class="etichette" aria-label="Cosa puoi fare e quali oggetti">
+                <li class="etichetta etichetta--scambia">Comprare usato</li>
+                <li class="etichetta etichetta--dona">Donare</li>
+                <li class="etichetta">Mobili</li>
+                <li class="etichetta">Casa e cucina</li>
+                <li class="etichetta">Libri e giochi</li>
+              </ul>
+              <p class="scheda__descrizione">Mercatino dell'usato gestito da una cooperativa sociale: puoi acquistare oggetti usati o lasciare in dono quelli che non ti servono più.</p>
+              <dl class="scheda__info">
+                <div><dt>Zona</dt><dd>Ovest</dd></div>
+                <div><dt>Indirizzo</dt><dd>Viale dei Tigli 40</dd></div>
+                <div><dt>Orari</dt><dd>Mer–Sab 9:30–12:30 e 15:30–19:00</dd></div>
+              </dl>
+            </article>
+          </li>
+
+          <li class="punto" data-azione="ripara" data-categoria="abbigliamento" data-zona="ovest">
+            <article class="scheda" aria-labelledby="p-sartoria">
+              <h3 id="p-sartoria">Sartoria del Riuso</h3>
+              <ul class="etichette" aria-label="Cosa puoi fare e quali oggetti">
+                <li class="etichetta etichetta--ripara">Riparare</li>
+                <li class="etichetta">Vestiti e scarpe</li>
+              </ul>
+              <p class="scheda__descrizione">Orli, cerniere, toppe e piccole modifiche a prezzi sociali. Il giovedì c'è un laboratorio per imparare a rammendare.</p>
+              <dl class="scheda__info">
+                <div><dt>Zona</dt><dd>Ovest</dd></div>
+                <div><dt>Indirizzo</dt><dd>Via San Marco 7</dd></div>
+                <div><dt>Orari</dt><dd>Lun–Ven 15:00–19:00</dd></div>
+              </dl>
+            </article>
+          </li>
+
+          <li class="punto" data-azione="scambia dona" data-categoria="libri" data-zona="nord">
+            <article class="scheda" aria-labelledby="p-libri">
+              <h3 id="p-libri">Libri in Circolo</h3>
+              <ul class="etichette" aria-label="Cosa puoi fare e quali oggetti">
+                <li class="etichetta etichetta--scambia">Scambiare</li>
+                <li class="etichetta etichetta--dona">Donare</li>
+                <li class="etichetta">Libri e giochi</li>
+              </ul>
+              <p class="scheda__descrizione">Scaffali di scambio libero: lascia un libro o un gioco da tavolo, prendine un altro. Si accettano anche donazioni.</p>
+              <dl class="scheda__info">
+                <div><dt>Zona</dt><dd>Nord</dd></div>
+                <div><dt>Indirizzo</dt><dd>Centro anziani, Via Verdi 12</dd></div>
+                <div><dt>Orari</dt><dd>Tutti i giorni 9:00–19:00</dd></div>
+              </dl>
+            </article>
+          </li>
+
+          <li class="punto" data-azione="ripara dona" data-categoria="mobili" data-zona="sud">
+            <article class="scheda" aria-labelledby="p-falegnameria">
+              <h3 id="p-falegnameria">Falegnameria Sociale Trucioli</h3>
+              <ul class="etichette" aria-label="Cosa puoi fare e quali oggetti">
+                <li class="etichetta etichetta--ripara">Riparare</li>
+                <li class="etichetta etichetta--dona">Donare</li>
+                <li class="etichetta">Mobili</li>
+              </ul>
+              <p class="scheda__descrizione">Ripara sedie, tavoli e armadi. Ritira anche mobili in legno da sistemare e rimettere in circolo. Ritiro a domicilio su appuntamento.</p>
+              <dl class="scheda__info">
+                <div><dt>Zona</dt><dd>Sud</dd></div>
+                <div><dt>Indirizzo</dt><dd>Via delle Querce 22</dd></div>
+                <div><dt>Orari</dt><dd>Lun–Ven 8:30–17:00</dd></div>
+              </dl>
+            </article>
+          </li>
+
+          <li class="punto" data-azione="scambia" data-categoria="casa elettronica" data-zona="ovest">
+            <article class="scheda" aria-labelledby="p-biblioteca-oggetti">
+              <h3 id="p-biblioteca-oggetti">Biblioteca degli Oggetti</h3>
+              <ul class="etichette" aria-label="Cosa puoi fare e quali oggetti">
+                <li class="etichetta etichetta--scambia">Prendere in prestito</li>
+                <li class="etichetta">Casa e cucina</li>
+                <li class="etichetta">Elettronica ed elettrodomestici</li>
+              </ul>
+              <p class="scheda__descrizione">Trapano, scala, macchina per il pane? Invece di comprarli, prendili in prestito con la tessera gratuita.</p>
+              <dl class="scheda__info">
+                <div><dt>Zona</dt><dd>Ovest</dd></div>
+                <div><dt>Indirizzo</dt><dd>Via Mazzini 3</dd></div>
+                <div><dt>Orari</dt><dd>Mar e Ven 16:00–19:00</dd></div>
+              </dl>
+            </article>
+          </li>
+
+          <li class="punto" data-azione="ricicla" data-categoria="elettronica" data-zona="centro">
+            <article class="scheda" aria-labelledby="p-ecosportello">
+              <h3 id="p-ecosportello">Ecosportello Piccoli RAEE</h3>
+              <ul class="etichette" aria-label="Cosa puoi fare e quali oggetti">
+                <li class="etichetta etichetta--ricicla">Riciclare</li>
+                <li class="etichetta">Elettronica ed elettrodomestici</li>
+              </ul>
+              <p class="scheda__descrizione">Contenitori per pile, cellulari, caricabatterie e piccoli apparecchi elettronici. Il personale ti spiega come differenziarli.</p>
+              <dl class="scheda__info">
+                <div><dt>Zona</dt><dd>Centro</dd></div>
+                <div><dt>Indirizzo</dt><dd>Municipio, Piazza Grande 1 (piano terra)</dd></div>
+                <div><dt>Orari</dt><dd>Lun–Ven 8:30–13:00</dd></div>
+              </dl>
+            </article>
+          </li>
+
+          <li class="punto" data-azione="ricicla dona" data-categoria="abbigliamento" data-zona="est">
+            <article class="scheda" aria-labelledby="p-cassonetti">
+              <h3 id="p-cassonetti">Punto raccolta indumenti Est</h3>
+              <ul class="etichette" aria-label="Cosa puoi fare e quali oggetti">
+                <li class="etichetta etichetta--ricicla">Riciclare</li>
+                <li class="etichetta etichetta--dona">Donare</li>
+                <li class="etichetta">Vestiti e scarpe</li>
+              </ul>
+              <p class="scheda__descrizione">Contenitori per abiti, scarpe e borse, anche usurati: quelli in buono stato vengono riutilizzati, gli altri avviati al riciclo tessile. Usa sacchetti chiusi.</p>
+              <dl class="scheda__info">
+                <div><dt>Zona</dt><dd>Est</dd></div>
+                <div><dt>Indirizzo</dt><dd>Parcheggio di Via Leopardi</dd></div>
+                <div><dt>Orari</dt><dd>Sempre accessibile</dd></div>
+              </dl>
+            </article>
+          </li>
+
+        </ol>
+
+        <!-- Il numero viene calcolato dal CSS (contatore) in base ai punti visibili. -->
+        <div class="esito">
+          <p class="esito__conteggio">Punti trovati con questi filtri: </p>
+          <p>Non trovi quello che cerchi? Prova a scegliere <em>Tutto</em> o <em>Tutte</em> in uno dei filtri, oppure <a href="segnala.html">segnalaci un nuovo punto</a>.</p>
+        </div>
+      </section>
+    </div>
+
+    <section class="invito" aria-labelledby="titolo-invito">
+      <div class="contenitore">
+        <h2 id="titolo-invito">Conosci un posto che dovrebbe essere qui?</h2>
+        <p>Un'officina, un mercatino, uno scambio di vestiti nel tuo quartiere: aiutaci a far crescere la guida.</p>
+        <a class="bottone" href="segnala.html">Segnala un punto</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="piede">
+    <div class="contenitore">
+      <p><strong>Fondazione Rigenera</strong> – per un'economia circolare alla portata di tutti.</p>
+      <p>Le informazioni sono verificate periodicamente ma orari e servizi possono cambiare: in caso di dubbio contatta il punto prima di andare.</p>
+      <p>Hai trovato un errore? <a href="segnala.html">Scrivici</a>.</p>
+    </div>
+  </footer>
+</body>
+</html>

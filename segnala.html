@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Segnala un punto – Guida al riuso – Fondazione Rigenera</title>
+  <meta name="description" content="Segnala alla Fondazione Rigenera un nuovo punto dove riparare, donare, scambiare o riciclare oggetti.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="salta" href="#contenuto">Vai al modulo</a>
+
+  <header class="testata">
+    <div class="contenitore testata__riga">
+      <a class="logo" href="index.html" aria-label="Fondazione Rigenera, pagina iniziale">
+        <span class="logo__segno" aria-hidden="true">↻</span>
+        <span>Fondazione <strong>Rigenera</strong></span>
+      </a>
+      <nav aria-label="Menu principale">
+        <ul class="menu">
+          <li><a href="index.html">Guida al riuso</a></li>
+          <li><a href="segnala.html" aria-current="page">Segnala un punto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenuto" class="contenitore contenitore--stretto">
+    <h1>Segnala un punto</h1>
+    <p class="intro__testo">Conosci un luogo dove si riparano, donano, scambiano o riciclano oggetti? Raccontacelo: lo verificheremo e, se adatto, lo aggiungeremo alla guida.</p>
+    <p>I campi con <span class="obbligatorio" aria-hidden="true">*</span> sono obbligatori. Ci vogliono circa 2 minuti.</p>
+
+    <!--
+      INVIO DEL MODULO
+      Il sito non ha un back end: le segnalazioni vengono inoltrate via e-mail alla Fondazione
+      tramite un servizio esterno per moduli statici (es. Formspree, Netlify Forms, Tally, Google Forms).
+      Sostituire l'indirizzo in "action" con quello fornito dal servizio scelto.
+    -->
+    <form class="modulo" action="https://formspree.io/f/ID-DA-INSERIRE" method="post">
+
+      <fieldset>
+        <legend>Il punto</legend>
+
+        <div class="campo">
+          <label for="nome-punto">Nome del punto <span class="obbligatorio" aria-hidden="true">*</span></label>
+          <input type="text" id="nome-punto" name="nome_punto" required aria-required="true" autocomplete="organization">
+        </div>
+
+        <fieldset class="campo campo--scelte">
+          <legend>Cosa si può fare? <span class="aiuto">Puoi scegliere più opzioni. Se non sei sicuro, descrivilo sotto.</span></legend>
+          <label class="scelta"><input type="checkbox" name="azione" value="ripara"> Riparare</label>
+          <label class="scelta"><input type="checkbox" name="azione" value="dona"> Donare</label>
+          <label class="scelta"><input type="checkbox" name="azione" value="scambia"> Scambiare o comprare usato</label>
+          <label class="scelta"><input type="checkbox" name="azione" value="ricicla"> Riciclare</label>
+        </fieldset>
+
+        <fieldset class="campo campo--scelte">
+          <legend>Quali oggetti? <span class="aiuto">Puoi scegliere più opzioni.</span></legend>
+          <label class="scelta"><input type="checkbox" name="categoria" value="bici"> Bici</label>
+          <label class="scelta"><input type="checkbox" name="categoria" value="abbigliamento"> Vestiti e scarpe</label>
+          <label class="scelta"><input type="checkbox" name="categoria" value="elettronica"> Elettronica ed elettrodomestici</label>
+          <label class="scelta"><input type="checkbox" name="categoria" value="mobili"> Mobili</label>
+          <label class="scelta"><input type="checkbox" name="categoria" value="libri"> Libri e giochi</label>
+          <label class="scelta"><input type="checkbox" name="categoria" value="casa"> Casa e cucina</label>
+          <label class="scelta"><input type="checkbox" name="categoria" value="altro"> Altro</label>
+        </fieldset>
+
+        <div class="campo">
+          <label for="zona">Zona <span class="obbligatorio" aria-hidden="true">*</span></label>
+          <select id="zona" name="zona" required aria-required="true">
+            <option value="">Scegli una zona</option>
+            <option value="centro">Centro</option>
+            <option value="nord">Nord</option>
+            <option value="sud">Sud</option>
+            <option value="est">Est</option>
+            <option value="ovest">Ovest</option>
+            <option value="non-so">Non lo so</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="indirizzo">Indirizzo <span class="obbligatorio" aria-hidden="true">*</span></label>
+          <input type="text" id="indirizzo" name="indirizzo" required aria-required="true" autocomplete="street-address" aria-describedby="aiuto-indirizzo">
+          <p class="aiuto" id="aiuto-indirizzo">Via e numero civico, oppure un riferimento (es. "parcheggio della stazione").</p>
+        </div>
+
+        <div class="campo">
+          <label for="orari">Orari, se li conosci</label>
+          <input type="text" id="orari" name="orari" aria-describedby="aiuto-orari">
+          <p class="aiuto" id="aiuto-orari">Esempio: lunedì–venerdì 9–12.</p>
+        </div>
+
+        <div class="campo">
+          <label for="descrizione">Descrizione <span class="obbligatorio" aria-hidden="true">*</span></label>
+          <textarea id="descrizione" name="descrizione" rows="5" required aria-required="true" maxlength="600" aria-describedby="aiuto-descrizione"></textarea>
+          <p class="aiuto" id="aiuto-descrizione">Cosa si fa lì e perché è utile. Massimo 600 caratteri.</p>
+        </div>
+
+        <div class="campo">
+          <label for="sito">Sito web o pagina social del punto</label>
+          <input type="url" id="sito" name="sito" inputmode="url" placeholder="https://" aria-describedby="aiuto-sito">
+          <p class="aiuto" id="aiuto-sito">Facoltativo. Ci aiuta a verificare le informazioni.</p>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Chi segnala</legend>
+        <p class="aiuto">Facoltativo: lascia un contatto solo se vuoi che ti ricontattiamo per eventuali domande.</p>
+
+        <div class="campo">
+          <label for="nome">Il tuo nome</label>
+          <input type="text" id="nome" name="nome" autocomplete="name">
+        </div>
+
+        <div class="campo">
+          <label for="email">La tua e-mail</label>
+          <input type="email" id="email" name="email" autocomplete="email" inputmode="email">
+        </div>
+
+        <div class="campo">
+          <label class="scelta">
+            <input type="checkbox" name="privacy" value="accetto" required aria-required="true">
+            <span>Ho letto l'<a href="#informativa">informativa sulla privacy</a> e acconsento al trattamento dei dati inviati. <span class="obbligatorio" aria-hidden="true">*</span></span>
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Campo-trappola anti-spam: nascosto alle persone, i bot tendono a compilarlo. -->
+      <div class="trappola" aria-hidden="true">
+        <label for="website">Non compilare questo campo</label>
+        <input type="text" id="website" name="_gotcha" tabindex="-1" autocomplete="off">
+      </div>
+
+      <button type="submit" class="bottone">Invia la segnalazione</button>
+    </form>
+
+    <section id="informativa" class="informativa" aria-labelledby="titolo-informativa">
+      <h2 id="titolo-informativa">Informativa sulla privacy (sintesi)</h2>
+      <p>I dati inviati con questo modulo sono usati dalla Fondazione Rigenera solo per valutare la segnalazione e, se ci lasci un contatto, per ricontattarti. Non vengono pubblicati né ceduti a terzi. Puoi chiederne la cancellazione in qualsiasi momento scrivendo alla Fondazione.</p>
+      <p><em>Testo provvisorio: da sostituire con l'informativa completa fornita dalla Fondazione.</em></p>
+    </section>
+  </main>
+
+  <footer class="piede">
+    <div class="contenitore">
+      <p><strong>Fondazione Rigenera</strong> – per un'economia circolare alla portata di tutti.</p>
+      <p><a href="index.html">Torna alla guida al riuso</a></p>
+    </div>
+  </footer>
+</body>
+</html>

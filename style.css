@@ -1,0 +1,504 @@
+/* ==========================================================================
+   Fondazione Rigenera – Guida al riuso
+   Foglio di stile unico. Mobile first: le regole base valgono per il telefono,
+   le media query aggiungono il layout per schermi più grandi.
+   ========================================================================== */
+
+/* ---------- 1. Variabili (colori e misure in un solo posto) ---------- */
+:root {
+  --verde-scuro: #1d4d2f;   /* contrasto 9.6:1 su bianco */
+  --verde: #2e7d4f;
+  --verde-chiaro: #e6f2ea;
+  --testo: #1b1f1c;         /* contrasto 16:1 su bianco */
+  --testo-tenue: #4a524d;   /* contrasto 7.9:1 su bianco */
+  --sfondo: #ffffff;
+  --sfondo-alt: #f5f7f4;
+  --bordo: #8a958d;         /* contrasto 3.1:1, sufficiente per bordi di controlli */
+  --focus: #b35c00;         /* anello di focus ben visibile, diverso dal verde */
+  --errore: #a4161a;
+
+  /* Colori delle azioni: testo scuro su fondo chiaro, contrasto ≥ 7:1 */
+  --ripara-sfondo: #fff1d6;  --ripara-testo: #6b3e00;
+  --dona-sfondo:   #fde4ec;  --dona-testo:   #7a1238;
+  --scambia-sfondo:#e1ecfb;  --scambia-testo:#123f7a;
+  --ricicla-sfondo:#dff3e4;  --ricicla-testo:#14532d;
+
+  --raggio: 0.75rem;
+  --spazio: 1rem;
+  --larghezza-max: 72rem;
+
+  color-scheme: light;
+}
+
+/* ---------- 2. Base ---------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  /* Le misure in rem rispettano la dimensione del testo scelta dall'utente nel browser. */
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 1.125rem;      /* 18px: testo più grande del solito, più leggibile */
+  line-height: 1.6;
+  color: var(--testo);
+  background: var(--sfondo);
+}
+
+h1, h2, h3 { line-height: 1.25; color: var(--verde-scuro); margin: 0 0 0.5em; }
+h1 { font-size: clamp(1.875rem, 5vw, 2.75rem); }
+h2 { font-size: clamp(1.375rem, 3.5vw, 1.75rem); }
+h3 { font-size: 1.25rem; }
+
+p { margin: 0 0 1em; max-width: 65ch; }
+
+a { color: var(--verde-scuro); text-decoration-thickness: 0.08em; text-underline-offset: 0.18em; }
+a:hover { text-decoration-thickness: 0.15em; }
+
+/* Focus sempre visibile per chi naviga da tastiera */
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+img { max-width: 100%; height: auto; }
+
+.contenitore {
+  width: 100%;
+  max-width: var(--larghezza-max);
+  margin-inline: auto;
+  padding-inline: var(--spazio);
+}
+.contenitore--stretto { max-width: 46rem; padding-block: 2rem 3rem; }
+
+/* Link "salta al contenuto": invisibile finché non riceve il focus con Tab */
+.salta {
+  position: absolute;
+  left: var(--spazio);
+  top: -100%;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  background: var(--verde-scuro);
+  color: #fff;
+  font-weight: 700;
+  border-radius: var(--raggio);
+}
+.salta:focus { top: var(--spazio); }
+
+/* ---------- 3. Testata e navigazione ---------- */
+.testata {
+  background: var(--sfondo);
+  border-bottom: 1px solid #d6ddd8;
+}
+.testata__riga {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  padding-block: 0.75rem;
+}
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.25rem;
+  color: var(--verde-scuro);
+  text-decoration: none;
+}
+.logo__segno {
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: var(--verde-scuro);
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.menu a {
+  display: inline-block;
+  padding: 0.5rem 0.25rem;      /* area di tocco comoda */
+  min-height: 44px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.menu a:hover { text-decoration: underline; }
+.menu a[aria-current="page"] {
+  text-decoration: underline;
+  text-decoration-thickness: 0.15em;
+}
+
+/* ---------- 4. Introduzione ---------- */
+.intro {
+  background: var(--verde-chiaro);
+  padding-block: 2rem;
+  margin-bottom: 1.5rem;
+}
+.intro__testo { font-size: 1.25rem; }
+
+/* ---------- 5. Layout della guida ---------- */
+.guida {
+  display: grid;
+  gap: 1.5rem;
+  padding-bottom: 3rem;
+}
+
+@media (min-width: 62rem) {
+  .guida {
+    grid-template-columns: 19rem 1fr;
+    align-items: start;
+  }
+  /* Su schermi grandi i filtri restano visibili mentre si scorre l'elenco */
+  .filtri {
+    position: sticky;
+    top: 1rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+  }
+}
+
+/* ---------- 6. Pannello filtri ---------- */
+.filtri {
+  background: var(--sfondo-alt);
+  border: 1px solid #d6ddd8;
+  border-radius: var(--raggio);
+  padding: 1.25rem;
+}
+.filtri__titolo { font-size: 1.375rem; }
+
+.gruppo {
+  border: 0;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  min-width: 0;
+}
+.gruppo legend {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  padding: 0;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Il radio vero resta nella pagina (e quindi raggiungibile da tastiera e lettori di schermo),
+   ma è nascosto alla vista: al suo posto si vede l'etichetta a forma di "pillola". */
+.chip { position: relative; }
+.chip input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+}
+.chip span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 44px;            /* area di tocco minima consigliata */
+  padding: 0.5rem 0.9rem;
+  border: 2px solid var(--bordo);
+  border-radius: 999px;
+  background: var(--sfondo);
+  font-size: 1rem;
+  line-height: 1.2;
+  cursor: pointer;
+}
+.chip:hover span { border-color: var(--verde-scuro); }
+
+.chip input:checked + span {
+  background: var(--verde-scuro);
+  border-color: var(--verde-scuro);
+  color: #fff;
+  font-weight: 700;
+}
+/* Il segno di spunta indica la scelta anche a chi non distingue i colori */
+.chip input:checked + span::before { content: "✓"; }
+
+.chip input:focus-visible + span {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+/* ---------- 7. Bottoni ---------- */
+.bottone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid var(--verde-scuro);
+  border-radius: var(--raggio);
+  background: var(--verde-scuro);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+.bottone:hover { background: var(--verde); border-color: var(--verde); }
+.bottone--secondario { background: var(--sfondo); color: var(--verde-scuro); }
+.bottone--secondario:hover { background: var(--verde-chiaro); border-color: var(--verde-scuro); }
+
+/* ---------- 8. Elenco dei punti ---------- */
+.risultati { counter-reset: punti; }
+.risultati:focus { outline: none; }
+
+.elenco {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.punto { counter-increment: punti; display: flex; }
+
+.scheda {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 1.25rem;
+  border: 1px solid #c9d2cc;
+  border-radius: var(--raggio);
+  background: var(--sfondo);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
+}
+.scheda h3 { margin-bottom: 0.6rem; }
+.scheda__descrizione { flex-grow: 1; }
+
+.etichette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.etichetta {
+  padding: 0.15rem 0.6rem;
+  border: 1px solid #c9d2cc;
+  border-radius: 999px;
+  background: var(--sfondo-alt);
+  color: var(--testo-tenue);
+  font-size: 0.9375rem;
+}
+/* Le etichette delle azioni hanno colore e testo in grassetto: il colore non è l'unica informazione */
+.etichetta--ripara  { background: var(--ripara-sfondo);  color: var(--ripara-testo);  border-color: currentColor; font-weight: 700; }
+.etichetta--dona    { background: var(--dona-sfondo);    color: var(--dona-testo);    border-color: currentColor; font-weight: 700; }
+.etichetta--scambia { background: var(--scambia-sfondo); color: var(--scambia-testo); border-color: currentColor; font-weight: 700; }
+.etichetta--ricicla { background: var(--ricicla-sfondo); color: var(--ricicla-testo); border-color: currentColor; font-weight: 700; }
+
+.scheda__info {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid #dfe5e1;
+  font-size: 1rem;
+}
+.scheda__info div { display: grid; grid-template-columns: 6rem 1fr; gap: 0.5rem; }
+.scheda__info dt { font-weight: 700; color: var(--testo-tenue); }
+.scheda__info dd { margin: 0; }
+
+/* Conteggio e messaggio sotto l'elenco */
+.esito {
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  border-left: 4px solid var(--verde);
+  background: var(--sfondo-alt);
+  border-radius: 0 var(--raggio) var(--raggio) 0;
+}
+.esito__conteggio { font-weight: 700; margin-bottom: 0.5rem; }
+.esito__conteggio::after { content: counter(punti); }
+.esito p:last-child { margin-bottom: 0; }
+
+/* ==========================================================================
+   9. FILTRI – la logica di ricerca, scritta solo in CSS
+   --------------------------------------------------------------------------
+   Il selettore :has() controlla quale scelta è attiva nel modulo dei filtri
+   e nasconde le schede che NON contengono quel valore nel loro attributo data-.
+   L'operatore ~= cerca una parola dentro un elenco separato da spazi,
+   per questo un punto può avere più azioni o categorie.
+
+   I tre gruppi si combinano da soli: una scheda resta visibile solo se
+   supera tutti i filtri attivi.
+
+   Per aggiungere una NUOVA categoria/zona:
+     1. aggiungere la pillola in index.html (id="cat-nuova");
+     2. copiare qui una riga cambiando il nome in entrambi i punti.
+   Per aggiungere un nuovo PUNTO non serve toccare questo file.
+
+   Se un browser molto vecchio non supporta :has(), queste regole vengono
+   ignorate e si vedono semplicemente tutti i punti: la guida resta usabile.
+   ========================================================================== */
+
+/* Azione */
+.guida:has(#az-ripara:checked)  .punto:not([data-azione~="ripara"])  { display: none; }
+.guida:has(#az-dona:checked)    .punto:not([data-azione~="dona"])    { display: none; }
+.guida:has(#az-scambia:checked) .punto:not([data-azione~="scambia"]) { display: none; }
+.guida:has(#az-ricicla:checked) .punto:not([data-azione~="ricicla"]) { display: none; }
+
+/* Categoria di oggetti */
+.guida:has(#cat-bici:checked)          .punto:not([data-categoria~="bici"])          { display: none; }
+.guida:has(#cat-abbigliamento:checked) .punto:not([data-categoria~="abbigliamento"]) { display: none; }
+.guida:has(#cat-elettronica:checked)   .punto:not([data-categoria~="elettronica"])   { display: none; }
+.guida:has(#cat-mobili:checked)        .punto:not([data-categoria~="mobili"])        { display: none; }
+.guida:has(#cat-libri:checked)         .punto:not([data-categoria~="libri"])         { display: none; }
+.guida:has(#cat-casa:checked)          .punto:not([data-categoria~="casa"])          { display: none; }
+
+/* Zona */
+.guida:has(#zona-centro:checked) .punto:not([data-zona~="centro"]) { display: none; }
+.guida:has(#zona-nord:checked)   .punto:not([data-zona~="nord"])   { display: none; }
+.guida:has(#zona-sud:checked)    .punto:not([data-zona~="sud"])    { display: none; }
+.guida:has(#zona-est:checked)    .punto:not([data-zona~="est"])    { display: none; }
+.guida:has(#zona-ovest:checked)  .punto:not([data-zona~="ovest"])  { display: none; }
+
+/* ---------- 10. Sezione invito ---------- */
+.invito {
+  background: var(--verde-scuro);
+  color: #fff;
+  padding-block: 2.5rem;
+}
+.invito h2 { color: #fff; }
+.invito .bottone { background: #fff; color: var(--verde-scuro); border-color: #fff; }
+.invito .bottone:hover { background: var(--verde-chiaro); }
+.invito :focus-visible { outline-color: #ffd28a; }
+
+/* ---------- 11. Modulo di segnalazione ---------- */
+.modulo fieldset {
+  margin: 0 0 1.5rem;
+  padding: 1.25rem;
+  border: 1px solid #c9d2cc;
+  border-radius: var(--raggio);
+  min-width: 0;
+}
+.modulo > fieldset > legend {
+  padding: 0 0.4rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--verde-scuro);
+}
+.campo { margin-bottom: 1.25rem; }
+.campo:last-child { margin-bottom: 0; }
+.campo > label { display: block; font-weight: 700; margin-bottom: 0.35rem; }
+
+.campo--scelte {
+  border: 0 !important;
+  padding: 0 !important;
+}
+.campo--scelte legend { font-weight: 700; margin-bottom: 0.35rem; padding: 0; }
+.campo--scelte .aiuto { display: block; font-weight: 400; }
+
+.modulo input[type="text"],
+.modulo input[type="email"],
+.modulo input[type="url"],
+.modulo select,
+.modulo textarea {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  padding: 0.65rem 0.8rem;
+  border: 2px solid var(--bordo);
+  border-radius: 0.5rem;
+  background: var(--sfondo);
+  color: var(--testo);
+  font: inherit;
+}
+.modulo textarea { resize: vertical; }
+.modulo input:focus-visible,
+.modulo select:focus-visible,
+.modulo textarea:focus-visible { border-color: var(--verde-scuro); }
+
+/* Errori mostrati solo dopo che l'utente ha interagito col campo (non all'apertura della pagina) */
+.modulo :user-invalid {
+  border-color: var(--errore);
+  background: #fff5f5;
+}
+
+.scelta {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.4rem 0;
+  min-height: 44px;
+  cursor: pointer;
+}
+.campo > label.scelta { font-weight: 400; margin-bottom: 0; }
+.scelta input {
+  flex-shrink: 0;
+  width: 1.4rem;
+  height: 1.4rem;
+  margin-top: 0.15rem;
+  accent-color: var(--verde-scuro);
+}
+
+.aiuto { margin: 0.3rem 0 0; font-size: 1rem; color: var(--testo-tenue); }
+.obbligatorio { color: var(--errore); font-weight: 700; }
+
+.trappola {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.informativa {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #c9d2cc;
+  font-size: 1rem;
+}
+.informativa h2 { font-size: 1.25rem; }
+
+/* ---------- 12. Piè di pagina ---------- */
+.piede {
+  padding-block: 2rem;
+  background: var(--sfondo-alt);
+  border-top: 1px solid #d6ddd8;
+  font-size: 1rem;
+}
+
+/* ---------- 13. Preferenze di accessibilità del sistema ---------- */
+
+/* Chi ha chiesto meno animazioni non vede lo scorrimento animato */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+
+/* Modalità a contrasto elevato di Windows: si garantiscono bordi visibili */
+@media (forced-colors: active) {
+  .chip span, .scheda, .etichetta, .filtri, .bottone { border: 2px solid CanvasText; }
+  .chip input:checked + span { border-width: 4px; }
+}
+
+/* Stampa: si stampa solo l'elenco, senza filtri né menu */
+@media print {
+  .salta, .testata nav, .filtri, .invito, .esito { display: none !important; }
+  body { font-size: 11pt; }
+  .elenco { display: block; }
+  .scheda { break-inside: avoid; box-shadow: none; margin-bottom: 0.5rem; }
+}
