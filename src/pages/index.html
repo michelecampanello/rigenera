@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guida al riuso - Fondazione Rigenera</title>
+  <meta name="description" content="Dove riparare, donare, scambiare o riciclare gli oggetti: la guida al riuso della Fondazione Rigenera.">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/script.js" defer></script>
+</head>
+<body>
+  <a class="salta" href="#risultati">Vai direttamente ai punti</a>
+
+  <header class="testata">
+    <div class="contenitore testata__riga">
+      <a class="logo" href="index.html" aria-label="Fondazione Rigenera, pagina iniziale">
+        <span class="logo__segno" aria-hidden="true">↻</span>
+        <span>Fondazione <strong>Rigenera</strong></span>
+      </a>
+      <nav aria-label="Menu principale">
+        <ul class="menu">
+          <li><a href="index.html" aria-current="page">Guida al riuso</a></li>
+          <li><a href="segnala.html">Segnala un punto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenuto">
+    <section class="intro">
+      <div class="contenitore">
+        <h1>Prima di buttarlo, dagli una seconda vita</h1>
+        <p class="intro__testo">Trova vicino a te dove <strong>riparare</strong>, <strong>donare</strong>, <strong>scambiare</strong> o <strong>riciclare</strong> correttamente i tuoi oggetti. Scegli cosa vuoi fare e la guida ti mostra solo i punti adatti.</p>
+      </div>
+    </section>
+
+    <div class="contenitore guida">
+
+      <form class="filtri" aria-labelledby="titolo-filtri">
+        <h2 id="titolo-filtri" class="filtri__titolo">Cosa ti serve?</h2>
+
+        <fieldset class="gruppo">
+          <legend>Cosa vuoi fare</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="azione" id="az-tutte" checked><span>Tutto</span></label>
+            <label class="chip"><input type="radio" name="azione" id="az-ripara"><span>Riparare</span></label>
+            <label class="chip"><input type="radio" name="azione" id="az-dona"><span>Donare</span></label>
+            <label class="chip"><input type="radio" name="azione" id="az-scambia"><span>Scambiare o comprare usato</span></label>
+            <label class="chip"><input type="radio" name="azione" id="az-ricicla"><span>Riciclare</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="gruppo">
+          <legend>Che oggetto hai</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="categoria" id="cat-tutte" checked><span>Tutti</span></label>
+            <label class="chip"><input type="radio" name="categoria" id="cat-bici"><span>Bici</span></label>
+            <label class="chip"><input type="radio" name="categoria" id="cat-abbigliamento"><span>Vestiti e scarpe</span></label>
+            <label class="chip"><input type="radio" name="categoria" id="cat-elettronica"><span>Elettronica ed elettrodomestici</span></label>
+            <label class="chip"><input type="radio" name="categoria" id="cat-mobili"><span>Mobili</span></label>
+            <label class="chip"><input type="radio" name="categoria" id="cat-libri"><span>Libri e giochi</span></label>
+            <label class="chip"><input type="radio" name="categoria" id="cat-casa"><span>Casa e cucina</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="gruppo">
+          <legend>In che zona</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="zona" id="zona-tutte" checked><span>Tutte</span></label>
+            <label class="chip"><input type="radio" name="zona" id="zona-centro"><span>Centro</span></label>
+            <label class="chip"><input type="radio" name="zona" id="zona-nord"><span>Nord</span></label>
+            <label class="chip"><input type="radio" name="zona" id="zona-sud"><span>Sud</span></label>
+            <label class="chip"><input type="radio" name="zona" id="zona-est"><span>Est</span></label>
+            <label class="chip"><input type="radio" name="zona" id="zona-ovest"><span>Ovest</span></label>
+          </div>
+        </fieldset>
+
+        <button type="reset" class="bottone bottone--secondario">Azzera i filtri</button>
+      </form>
+
+      <section id="risultati" class="risultati" aria-labelledby="titolo-risultati" tabindex="-1">
+        <h2 id="titolo-risultati">Punti della guida</h2>
+
+        <ol id="elenco-punti" class="elenco" role="list">
+
+        </ol>
+
+        <div class="esito">
+          <p class="esito__conteggio">Punti trovati con questi filtri: </p>
+          <p>Non trovi quello che cerchi? Prova a scegliere <em>Tutto</em> o <em>Tutte</em> in uno dei filtri, oppure <a href="segnala.html">segnalaci un nuovo punto</a>.</p>
+        </div>
+      </section>
+    </div>
+
+    <section class="invito" aria-labelledby="titolo-invito">
+      <div class="contenitore">
+        <h2 id="titolo-invito">Conosci un posto che dovrebbe essere qui?</h2>
+        <p>Un'officina, un mercatino, uno scambio di vestiti nel tuo quartiere: aiutaci a far crescere la guida.</p>
+        <a class="bottone" href="segnala.html">Segnala un punto</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="piede">
+    <div class="contenitore">
+      <p><strong>Fondazione Rigenera</strong> - per un'economia circolare alla portata di tutti.</p>
+      <p>Le informazioni sono verificate periodicamente ma orari e servizi possono cambiare: in caso di dubbio contatta il punto prima di andare.</p>
+      <p>Hai trovato un errore? <a href="segnala.html">Scrivici</a>.</p>
+    </div>
+  </footer>
+</body>
+</html>

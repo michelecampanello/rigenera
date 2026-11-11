@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Segnala un punto – Guida al riuso – Fondazione Rigenera</title>
   <meta name="description" content="Segnala alla Fondazione Rigenera un nuovo punto dove riparare, donare, scambiare o riciclare oggetti.">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/script.js" defer></script>
 </head>
 <body>
   <a class="salta" href="#contenuto">Vai al modulo</a>
@@ -32,11 +33,10 @@
 
     <!--
       INVIO DEL MODULO
-      Il sito non ha un back end: le segnalazioni vengono inoltrate via e-mail alla Fondazione
-      tramite un servizio esterno per moduli statici (es. Formspree, Netlify Forms, Tally, Google Forms).
-      Sostituire l'indirizzo in "action" con quello fornito dal servizio scelto.
+      Il modulo è gestito da script.js: alla conferma il nuovo punto viene salvato
+      nel localStorage del browser e compare subito nell'elenco di index.html.
     -->
-    <form class="modulo" action="https://formspree.io/f/ID-DA-INSERIRE" method="post">
+    <form class="modulo" id="modulo-segnala" method="post">
 
       <fieldset>
         <legend>Il punto</legend>
@@ -132,6 +132,8 @@
       </div>
 
       <button type="submit" class="bottone">Invia la segnalazione</button>
+
+      <p id="messaggio-modulo" class="messaggio" role="status" tabindex="-1"></p>
     </form>
 
     <section id="informativa" class="informativa" aria-labelledby="titolo-informativa">

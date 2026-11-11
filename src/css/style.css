@@ -465,6 +465,22 @@ img { max-width: 100%; height: auto; }
   overflow: hidden;
 }
 
+/* Messaggio dopo l'invio del modulo (scritto da script.js) */
+.messaggio:empty { display: none; }
+.messaggio {
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  border-left: 4px solid var(--verde);
+  border-radius: 0 var(--raggio) var(--raggio) 0;
+  background: var(--verde-chiaro);
+}
+.messaggio--errore {
+  border-left-color: var(--errore);
+  background: #fdecec;
+  color: var(--errore);
+  font-weight: 700;
+}
+
 .informativa {
   margin-top: 3rem;
   padding-top: 1.5rem;
