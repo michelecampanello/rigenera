@@ -3,14 +3,16 @@
 Sito statico in **HTML, CSS e un po' di JavaScript**. Nessun back end, nessun database: i punti sono salvati nel `localStorage` del browser.
 
 ```
-src/pages/index.html    → la guida: filtri + elenco dei punti
-src/pages/segnala.html  → modulo con cui i cittadini segnalano nuovi punti
-src/css/01-…12-*.css    → lo stile, diviso per sezione (variabili, base, testata, filtri, elenco, modulo…)
-src/js/script.js        → genera le schede, salva le segnalazioni, annuncia i risultati
-src/img/                → favicon (SVG, ICO, PNG per la schermata Home)
+docs/index.html         → la guida: filtri + elenco dei punti
+docs/segnala.html       → modulo con cui i cittadini segnalano nuovi punti
+docs/css/01-…12-*.css   → lo stile, diviso per sezione (variabili, base, testata, filtri, elenco, modulo…)
+docs/js/script.js       → genera le schede, salva le segnalazioni, annuncia i risultati
+docs/img/               → favicon (SVG, ICO, PNG per la schermata Home)
 ```
 
-Per pubblicarlo basta caricare la cartella `src` su un qualsiasi hosting statico (GitHub Pages, Netlify, l'hosting già in uso dalla Fondazione). Si apre anche con un doppio clic su `src/pages/index.html`.
+Il sito è tutto nella cartella `docs`, che si può caricare su qualsiasi hosting statico (Netlify, l'hosting già in uso dalla Fondazione). Si apre anche con un doppio clic su `docs/index.html`.
+
+**GitHub Pages:** in *Settings → Pages → Build and deployment* scegliere *Deploy from a branch*, branch `main`, cartella `/docs`.
 
 ---
 
