@@ -1,14 +1,16 @@
 # Guida al riuso – Fondazione Rigenera
 
-Sito statico in **solo HTML e CSS**. Nessun JavaScript, nessun back end, nessun database.
+Sito statico in **HTML, CSS e un po' di JavaScript**. Nessun back end, nessun database: i punti sono salvati nel `localStorage` del browser.
 
 ```
-index.html    → la guida: filtri + elenco dei punti
-segnala.html  → modulo con cui i cittadini segnalano nuovi punti
-style.css     → tutto lo stile, compresa la logica dei filtri
+src/pages/index.html    → la guida: filtri + elenco dei punti
+src/pages/segnala.html  → modulo con cui i cittadini segnalano nuovi punti
+src/css/01-…12-*.css    → lo stile, diviso per sezione (variabili, base, testata, filtri, elenco, modulo…)
+src/js/script.js        → genera le schede, salva le segnalazioni, annuncia i risultati
+src/img/                → favicon (SVG, ICO, PNG per la schermata Home)
 ```
 
-Per pubblicarlo basta caricare i tre file su un qualsiasi hosting statico (GitHub Pages, Netlify, l'hosting già in uso dalla Fondazione). Si apre anche con un doppio clic su `index.html`.
+Per pubblicarlo basta caricare la cartella `src` su un qualsiasi hosting statico (GitHub Pages, Netlify, l'hosting già in uso dalla Fondazione). Si apre anche con un doppio clic su `src/pages/index.html`.
 
 ---
 
@@ -32,46 +34,43 @@ Per pubblicarlo basta caricare i tre file su un qualsiasi hosting statico (GitHu
 
 Tre gruppi di filtri che corrispondono al bisogno reale: **azione → oggetto → zona**. "Dove riparo la bici?" si risolve con due tocchi.
 
-**Come funziona senza JavaScript.** Ogni filtro è un pulsante radio. In `style.css`, il selettore `:has()` controlla quale scelta è attiva e nasconde le schede il cui attributo `data-` non contiene quel valore:
+**Filtri dinamici.** Le pillole non sono scritte a mano: `script.js` le genera da `GRUPPI_FILTRI`, che a sua volta usa `NOMI_AZIONI`, `NOMI_CATEGORIE` e `NOMI_ZONE`. Ogni pillola è un vero pulsante radio, quindi la tastiera e i lettori di schermo funzionano come prima: Tab tra i gruppi, frecce dentro il gruppo.
 
-```css
-.guida:has(#az-ripara:checked) .punto:not([data-azione~="ripara"]) { display: none; }
-```
-
-- I tre gruppi si combinano da soli: resta visibile solo ciò che supera tutti i filtri.
-- Un punto può avere **più azioni o categorie** (`data-azione="ripara dona"`), grazie all'operatore `~=`.
-- **"Azzera i filtri"** è un `<button type="reset">` nativo: riporta tutto su "Tutto" senza codice.
-- Il **numero di risultati** è calcolato da un contatore CSS (`counter()`): gli elementi nascosti non vengono contati.
-- **Degradazione elegante**: un browser molto vecchio che non supporta `:has()` (supportato da tutti i browser principali dalla fine del 2023) mostra semplicemente tutti i punti. La guida resta comunque utilizzabile.
+- I tre gruppi si combinano: resta visibile solo ciò che supera tutti i filtri. Le schede escluse ricevono l'attributo `hidden`, quindi spariscono anche per il lettore di schermo.
+- Un punto può avere **più azioni o categorie**.
+- **Ogni pillola mostra quanti punti troverebbe**, tenendo fermi gli altri due filtri. Il numero si aggiorna a ogni scelta. Le pillole che non troverebbero nulla hanno il bordo tratteggiato ma restano selezionabili.
+- **"Azzera i filtri"** è un `<button type="reset">` nativo: riporta tutto su "Tutto".
+- Il **numero di risultati** sotto l'elenco è calcolato da un contatore CSS (`counter()`): le schede nascoste non vengono contate.
+- **Annuncio per i lettori di schermo**: a ogni cambio di filtro (e dopo "Azzera i filtri") il numero di punti trovati viene scritto in una regione `aria-live`, invisibile a schermo, che il lettore di schermo legge da solo.
+- Se JavaScript è disattivato, al posto dell'elenco compare un avviso (`<noscript>`).
 
 ### 3. "Aggiornare l'elenco non deve diventare un incubo"
 
-Con il vincolo "solo HTML e CSS" i punti stanno in `index.html`, ma organizzati in modo che **aggiungere un punto voglia dire toccare un solo blocco in un solo file**:
+I punti sono dati, non HTML: stanno nell'array `PUNTI_INIZIALI` di `script.js` e, dopo la prima visita, nel `localStorage`. La funzione `creaScheda()` trasforma ogni punto in una scheda con gli attributi `data-azione`, `data-categoria` e `data-zona` (usati dal CSS per il colore del cartellino).
 
-1. In `index.html` c'è un **modello commentato** con le istruzioni passo passo.
-2. Si copia un blocco `<li class="punto">…</li>`, si cambiano i testi e i tre attributi `data-azione`, `data-categoria` e `data-zona`.
-3. **Non si tocca il CSS**: i filtri leggono gli attributi e funzionano da soli.
+1. Per aggiungere un punto si usa il modulo di `segnala.html`, oppure si aggiunge un oggetto a `PUNTI_INIZIALI`.
+2. **Non si tocca né l'HTML né il CSS**: filtri e conteggi si aggiornano da soli.
 
-Il CSS va modificato solo per aggiungere una **nuova categoria o zona**: una pillola in HTML e una riga in CSS, come spiegato nei commenti.
+Per aggiungere una **nuova categoria o zona** basta una voce in `NOMI_CATEGORIE` o `NOMI_ZONE` di `script.js`: compaiono da sole sia la pillola nei filtri sia la casella (o l'opzione della zona) nel modulo di `segnala.html`.
 
 ### 4. "I cittadini possono segnalarci nuovi punti"
 
-`segnala.html` contiene un modulo HTML con gli stessi campi di una scheda (nome, azioni, categorie, zona, indirizzo, orari, descrizione), più un contatto facoltativo e il consenso privacy.
+`segnala.html` contiene un modulo con gli stessi campi di una scheda (nome, azioni, categorie, zona, indirizzo, orari, descrizione), più un contatto facoltativo e il consenso privacy. Le caselle di azioni e categorie e le opzioni della zona vengono generate da `script.js` con gli stessi dati dei filtri, quindi guida e modulo non possono andare fuori sincrono.
 
-- **Senza back end** il modulo invia i dati a un servizio per moduli statici (Formspree, Netlify Forms, Tally…), che li inoltra via e-mail alla Fondazione. **Da fare:** sostituire `ID-DA-INSERIRE` nell'attributo `action` con l'indirizzo fornito dal servizio scelto.
+- Il punto segnalato viene **salvato nel `localStorage`** e compare subito nell'elenco, con il link al sito se è stato indicato (solo indirizzi `http`/`https`).
 - Validazione nativa del browser (`required`, `type="email"`, `type="url"`, `maxlength`). Gli errori vengono evidenziati con `:user-invalid`, quindi solo dopo che l'utente ha toccato il campo e non appena si apre la pagina.
 - `autocomplete` e `inputmode` sui campi, per compilare più in fretta dal telefono.
 - Un **campo-trappola anti-spam** (honeypot), invisibile alle persone.
-- Le segnalazioni **non vengono pubblicate in automatico**: la Fondazione le verifica prima di inserirle. In questo modo la guida resta affidabile.
+- **Da fare:** oggi le segnalazioni vengono pubblicate subito, senza la verifica della Fondazione promessa nel testo del modulo. Serve uno stato "da verificare" (vedi fase 2).
 
 ---
 
-## Limiti noti (con il vincolo "solo HTML e CSS")
+## Limiti noti
 
-- **Annuncio dei risultati**: il conteggio si aggiorna a schermo, ma un lettore di schermo non lo annuncia automaticamente quando cambia un filtro (servirebbe una riga di JavaScript con `aria-live`). Le schede nascoste però spariscono anche per il lettore di schermo, che legge solo i risultati pertinenti.
-- **Messaggio "nessun risultato"**: per le combinazioni di filtri non si può mostrare in solo CSS. Il contatore mostra comunque "0" accanto all'invito a togliere un filtro o a segnalare un punto.
+- **Dati solo nel browser**: il `localStorage` vive in un solo browser di un solo dispositivo. Un punto segnalato da un cittadino non arriva né alla Fondazione né agli altri visitatori.
+- **Messaggio "nessun risultato"**: a schermo non c'è ancora un messaggio dedicato (il lettore di schermo invece annuncia "Nessun punto trovato"). Il contatore mostra comunque "0" accanto all'invito a togliere un filtro o a segnalare un punto.
 - **Checkbox "Cosa si può fare?"**: l'HTML non permette di rendere obbligatoria "almeno una" casella di un gruppo, per questo il campo è facoltativo.
-- **Molti punti**: sopra il centinaio di schede, mantenerle a mano in un unico HTML diventa scomodo.
+- **Molti punti**: sopra il centinaio di schede, mantenerle a mano in un array dentro `script.js` diventa scomodo.
 
 ## Proposta per la fase 2 (quando i punti cresceranno)
 
@@ -79,7 +78,7 @@ Il markup e il CSS di questa versione restano validi: cambia solo **dove vivono 
 
 1. **Dati in un file separato** (`punti.json` o un foglio Google), da cui un generatore di siti statici (es. **Eleventy**) crea l'HTML in automatico a ogni modifica. Il CSS dei filtri resta identico.
 2. **Pannello di modifica senza codice** con un CMS headless gratuito (es. **Decap CMS**): Giulia aggiunge e modifica i punti da un modulo web, senza mai aprire un file HTML.
-3. **Un tocco di JavaScript progressivo** per annunciare i risultati ai lettori di schermo, mostrare il messaggio "nessun risultato", aggiungere una ricerca testuale libera e, più avanti, una mappa.
+3. **Più JavaScript progressivo** per mostrare il messaggio "nessun risultato", aggiungere una ricerca testuale libera e, più avanti, una mappa.
 4. Le segnalazioni del modulo possono arrivare direttamente come bozze nel CMS, invece che per e-mail.
 
 > Nota: i punti presenti nella guida sono **dati di esempio** inventati, da sostituire con quelli reali della Fondazione.

@@ -1,0 +1,11 @@
+/* ---------- 11. Piè di pagina ---------- */
+.piede {
+  padding-block: 2.5rem;
+  background: var(--inchiostro);
+  color: var(--carta);
+  font-size: 1rem;
+}
+.piede strong { font-family: var(--font-titoli); font-size: 1.15rem; }
+.piede a { color: var(--evidenziatore); }
+.piede :focus-visible { outline-color: var(--evidenziatore); }
+.piede p:last-child { margin-bottom: 0; }

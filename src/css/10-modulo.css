@@ -1,0 +1,120 @@
+/* ---------- 10. Modulo di segnalazione ---------- */
+.contenitore--stretto > h1 { color: var(--inchiostro); }
+
+/* Ogni sezione del modulo è un cartellino, con il titolo su una linguetta scura */
+.modulo fieldset {
+  margin: 2.25rem 0 1.75rem;
+  padding: 1.5rem 1.25rem 1.25rem;
+  border: 2px solid var(--inchiostro);
+  border-radius: var(--raggio);
+  background: var(--carta-chiara);
+  box-shadow: var(--ombra);
+  min-width: 0;
+}
+.modulo > fieldset > legend {
+  padding: 0.3rem 0.9rem;
+  border: 2px solid var(--inchiostro);
+  border-radius: 999px;
+  background: var(--inchiostro);
+  color: var(--carta-chiara);
+  font-family: var(--font-titoli);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.campo { margin-bottom: 1.25rem; }
+.campo:last-child { margin-bottom: 0; }
+.campo > label { display: block; font-weight: 700; margin-bottom: 0.35rem; }
+
+.campo--scelte {
+  margin: 0 0 1.25rem !important;
+  border: 0 !important;
+  padding: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+.campo--scelte legend { font-weight: 700; margin-bottom: 0.35rem; padding: 0; }
+.campo--scelte .aiuto { display: block; font-weight: 400; }
+
+.modulo input[type="text"],
+.modulo input[type="email"],
+.modulo input[type="url"],
+.modulo select,
+.modulo textarea {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  padding: 0.65rem 0.8rem;
+  border: 2px solid var(--inchiostro);
+  border-radius: var(--raggio);
+  background: #fff;
+  color: var(--inchiostro);
+  font: inherit;
+  transition: box-shadow 0.15s;
+}
+.modulo textarea { resize: vertical; }
+.modulo input:focus-visible,
+.modulo select:focus-visible,
+.modulo textarea:focus-visible {
+  border-color: var(--inchiostro);
+  box-shadow: 4px 4px 0 var(--evidenziatore);
+}
+
+/* Errori mostrati solo dopo che l'utente ha interagito col campo (non all'apertura della pagina) */
+.modulo :user-invalid {
+  border-color: var(--errore);
+  background: #fff5f5;
+}
+
+.scelta {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.4rem 0;
+  min-height: 44px;
+  cursor: pointer;
+}
+.campo > label.scelta { font-weight: 400; margin-bottom: 0; }
+.scelta input {
+  flex-shrink: 0;
+  width: 1.4rem;
+  height: 1.4rem;
+  margin-top: 0.15rem;
+  accent-color: var(--verde-scuro);
+}
+
+.aiuto { margin: 0.3rem 0 0; font-size: 1rem; color: var(--testo-tenue); }
+.obbligatorio { color: var(--errore); font-weight: 700; }
+
+.trappola {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Messaggio dopo l'invio del modulo (scritto da script.js) */
+.messaggio:empty { display: none; }
+.messaggio {
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  border: 2px solid var(--inchiostro);
+  border-radius: var(--raggio);
+  background: var(--verde-chiaro);
+  box-shadow: var(--ombra);
+}
+.messaggio--errore {
+  border-color: var(--errore);
+  background: #fdecec;
+  color: var(--errore);
+  font-weight: 700;
+  box-shadow: 4px 4px 0 var(--errore);
+}
+
+.informativa {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 2px dashed var(--bordo);
+  font-size: 1rem;
+}
+.informativa h2 { font-size: 1.25rem; }

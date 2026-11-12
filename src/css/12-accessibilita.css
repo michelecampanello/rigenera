@@ -1,0 +1,25 @@
+/* ---------- 12. Preferenze di accessibilità del sistema ---------- */
+
+/* Chi ha chiesto meno animazioni non vede movimenti: niente rotazioni né spostamenti */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  .scheda:hover, .bottone:hover, .bottone:active { transform: none; }
+}
+
+/* Modalità a contrasto elevato di Windows: si garantiscono bordi visibili */
+@media (forced-colors: active) {
+  .chip span, .scheda, .etichetta, .filtri, .bottone, .esito, .modulo fieldset { border: 2px solid CanvasText; }
+  .chip input:checked + span { border-width: 4px; }
+  .evidenzia { background: none; text-decoration: underline; }
+}
+
+/* Stampa: si stampa solo l'elenco, senza filtri né menu */
+@media print {
+  .salta, .testata nav, .filtri, .invito, .esito, .sigillo, .intro::after { display: none !important; }
+  body { font-size: 11pt; background: #fff; }
+  .elenco { display: block; }
+  .scheda { break-inside: avoid; box-shadow: none; margin-bottom: 0.5rem; transform: none !important; }
+  .scheda::after { display: none; }
+  .piede { background: none; color: #000; }
+}

@@ -1,0 +1,158 @@
+/* ---------- 8. Elenco dei punti ---------- */
+.risultati { counter-reset: punti; }
+.risultati:focus { outline: none; }
+
+.elenco {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+  gap: 1.75rem 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.punto { counter-increment: punti; display: flex; }
+
+/* Colore del cartellino: segue la PRIMA azione del punto */
+.punto                          { --tinta: var(--verde-chiaro);   --tinta-testo: var(--verde-scuro); }
+.punto[data-azione^="ripara"]   { --tinta: var(--ripara-sfondo);  --tinta-testo: var(--ripara-testo); }
+.punto[data-azione^="dona"]     { --tinta: var(--dona-sfondo);    --tinta-testo: var(--dona-testo); }
+.punto[data-azione^="scambia"]  { --tinta: var(--scambia-sfondo); --tinta-testo: var(--scambia-testo); }
+.punto[data-azione^="ricicla"]  { --tinta: var(--ricicla-sfondo); --tinta-testo: var(--ricicla-testo); }
+
+/* La scheda è un cartellino: fascia colorata in alto, foro per il filo, linea tratteggiata */
+.scheda {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 1.25rem 1.25rem;
+  border: 2px solid var(--inchiostro);
+  border-radius: var(--raggio) 1.75rem var(--raggio) var(--raggio);
+  background: var(--carta-chiara);
+  box-shadow: var(--ombra);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.scheda:hover { transform: translate(-3px, -3px) rotate(-0.4deg); box-shadow: var(--ombra-alta); }
+
+.scheda::before {
+  content: "";
+  display: block;
+  height: 2.75rem;
+  margin: 0 -1.25rem 1rem;
+  border-bottom: 2px solid var(--inchiostro);
+  border-radius: calc(var(--raggio) - 2px) calc(1.75rem - 2px) 0 0;
+  background:
+    repeating-linear-gradient(-45deg, transparent 0 8px, rgb(0 0 0 / 0.05) 8px 10px),
+    var(--tinta);
+}
+/* Il foro del cartellino */
+.scheda::after {
+  content: "";
+  position: absolute;
+  top: 0.8rem;
+  right: 1.25rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 2px solid var(--inchiostro);
+  border-radius: 50%;
+  background: var(--carta);
+  box-shadow: inset 2px 2px 0 rgb(0 0 0 / 0.15);
+}
+
+.scheda h3 { margin-bottom: 0.6rem; color: var(--inchiostro); }
+.scheda__descrizione { flex-grow: 1; }
+
+.etichette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+.etichetta {
+  padding: 0.15rem 0.6rem;
+  border: 1px solid var(--bordo);
+  border-radius: 999px;
+  background: var(--carta);
+  color: var(--testo-tenue);
+  font-size: 0.9375rem;
+}
+/* Le azioni sono "timbri": maiuscolo, bordo doppio, leggermente storti.
+   Colore e testo in grassetto: il colore non è l'unica informazione. */
+.etichetta--ripara,
+.etichetta--dona,
+.etichetta--scambia,
+.etichetta--ricicla {
+  border: 2px solid currentColor;
+  border-radius: 0.3rem;
+  outline: 1px solid currentColor;
+  outline-offset: -5px;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(-2deg);
+}
+.etichetta--ripara  { background: var(--ripara-sfondo);  color: var(--ripara-testo); }
+.etichetta--dona    { background: var(--dona-sfondo);    color: var(--dona-testo); }
+.etichetta--scambia { background: var(--scambia-sfondo); color: var(--scambia-testo); }
+.etichetta--ricicla { background: var(--ricicla-sfondo); color: var(--ricicla-testo); }
+
+.scheda__info {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding-top: 0.9rem;
+  border-top: 2px dashed var(--bordo);
+  font-size: 1rem;
+}
+.scheda__info div { display: grid; grid-template-columns: 6rem 1fr; gap: 0.5rem; }
+.scheda__info dt {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--testo-tenue);
+  padding-top: 0.15rem;
+}
+.scheda__info dd { margin: 0; }
+
+/* Conteggio e messaggio sotto l'elenco */
+.esito {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding: 1.25rem 1.5rem;
+  border: 2px dashed var(--inchiostro);
+  border-radius: var(--raggio);
+  background: var(--carta-chiara);
+}
+.esito__conteggio {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+  font-weight: 700;
+  margin: 0;
+}
+/* Il numero di punti trovati, grande, su un tratto di evidenziatore */
+.esito__conteggio::after {
+  content: counter(punti);
+  padding: 0 0.3em;
+  background: var(--evidenziatore);
+  border: 2px solid var(--inchiostro);
+  border-radius: 0.4rem;
+  font-family: var(--font-titoli);
+  font-size: 2rem;
+  line-height: 1.2;
+}
+.esito p:last-child { margin-bottom: 0; }
+
+/* Filtri: le pillole e la logica sono in script.js. Le schede che non
+   corrispondono ricevono l'attributo hidden. Per aggiungere una nuova
+   categoria o zona basta una voce in NOMI_CATEGORIE o NOMI_ZONE:
+   il CSS non va toccato. */
+.punto[hidden] { display: none; }

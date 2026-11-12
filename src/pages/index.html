@@ -5,10 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Guida al riuso - Fondazione Rigenera</title>
   <meta name="description" content="Dove riparare, donare, scambiare o riciclare gli oggetti: la guida al riuso della Fondazione Rigenera.">
+  <!-- Favicon: SVG per i browser moderni, ICO per quelli vecchi, PNG per la schermata Home di iPhone e iPad -->
+  <link rel="icon" href="../img/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="icon" href="../img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+  <meta name="theme-color" content="#f3ede1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,600;9..144,800&display=swap">
-  <link rel="stylesheet" href="../css/style.css">
+  <!-- Lo stile è diviso in file numerati: l'ordine dei link conta -->
+  <link rel="stylesheet" href="../css/01-variabili.css">
+  <link rel="stylesheet" href="../css/02-base.css">
+  <link rel="stylesheet" href="../css/03-testata.css">
+  <link rel="stylesheet" href="../css/04-intro.css">
+  <link rel="stylesheet" href="../css/05-guida.css">
+  <link rel="stylesheet" href="../css/06-filtri.css">
+  <link rel="stylesheet" href="../css/07-bottoni.css">
+  <link rel="stylesheet" href="../css/08-elenco.css">
+  <link rel="stylesheet" href="../css/09-invito.css">
+  <link rel="stylesheet" href="../css/10-modulo.css">
+  <link rel="stylesheet" href="../css/11-piede.css">
+  <link rel="stylesheet" href="../css/12-accessibilita.css">
   <script src="../js/script.js" defer></script>
 </head>
 <body>
@@ -59,38 +76,17 @@
 
         <fieldset class="gruppo">
           <legend>Cosa vuoi fare</legend>
-          <div class="chips">
-            <label class="chip"><input type="radio" name="azione" id="az-tutte" checked><span>Tutto</span></label>
-            <label class="chip"><input type="radio" name="azione" id="az-ripara"><span>Riparare</span></label>
-            <label class="chip"><input type="radio" name="azione" id="az-dona"><span>Donare</span></label>
-            <label class="chip"><input type="radio" name="azione" id="az-scambia"><span>Scambiare o comprare usato</span></label>
-            <label class="chip"><input type="radio" name="azione" id="az-ricicla"><span>Riciclare</span></label>
-          </div>
+          <div class="chips" data-gruppo="azione"></div>
         </fieldset>
 
         <fieldset class="gruppo">
           <legend>Che oggetto hai</legend>
-          <div class="chips">
-            <label class="chip"><input type="radio" name="categoria" id="cat-tutte" checked><span>Tutti</span></label>
-            <label class="chip"><input type="radio" name="categoria" id="cat-bici"><span>Bici</span></label>
-            <label class="chip"><input type="radio" name="categoria" id="cat-abbigliamento"><span>Vestiti e scarpe</span></label>
-            <label class="chip"><input type="radio" name="categoria" id="cat-elettronica"><span>Elettronica ed elettrodomestici</span></label>
-            <label class="chip"><input type="radio" name="categoria" id="cat-mobili"><span>Mobili</span></label>
-            <label class="chip"><input type="radio" name="categoria" id="cat-libri"><span>Libri e giochi</span></label>
-            <label class="chip"><input type="radio" name="categoria" id="cat-casa"><span>Casa e cucina</span></label>
-          </div>
+          <div class="chips" data-gruppo="categoria"></div>
         </fieldset>
 
         <fieldset class="gruppo">
           <legend>In che zona</legend>
-          <div class="chips">
-            <label class="chip"><input type="radio" name="zona" id="zona-tutte" checked><span>Tutte</span></label>
-            <label class="chip"><input type="radio" name="zona" id="zona-centro"><span>Centro</span></label>
-            <label class="chip"><input type="radio" name="zona" id="zona-nord"><span>Nord</span></label>
-            <label class="chip"><input type="radio" name="zona" id="zona-sud"><span>Sud</span></label>
-            <label class="chip"><input type="radio" name="zona" id="zona-est"><span>Est</span></label>
-            <label class="chip"><input type="radio" name="zona" id="zona-ovest"><span>Ovest</span></label>
-          </div>
+          <div class="chips" data-gruppo="zona"></div>
         </fieldset>
 
         <button type="reset" class="bottone bottone--secondario">Azzera i filtri</button>
@@ -99,9 +95,16 @@
       <section id="risultati" class="risultati" aria-labelledby="titolo-risultati" tabindex="-1">
         <h2 id="titolo-risultati">Punti della guida</h2>
 
+        <noscript>
+          <p class="messaggio messaggio--errore">Per vedere l'elenco dei punti è necessario attivare JavaScript nel browser.</p>
+        </noscript>
+
         <ol id="elenco-punti" class="elenco" role="list">
 
         </ol>
+
+        <!-- Annuncia ai lettori di schermo il numero di punti quando cambiano i filtri -->
+        <p id="annuncio-risultati" class="solo-lettori" aria-live="polite" aria-atomic="true"></p>
 
         <div class="esito">
           <p class="esito__conteggio">Punti trovati con questi filtri: </p>

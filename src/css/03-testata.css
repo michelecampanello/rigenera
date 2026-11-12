@@ -1,0 +1,67 @@
+/* ---------- 3. Testata e navigazione ---------- */
+.testata {
+  background: var(--carta-chiara);
+  border-bottom: 2px solid var(--inchiostro);
+}
+.testata__riga {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  padding-block: 0.75rem;
+}
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-titoli);
+  font-size: 1.3rem;
+  color: var(--inchiostro);
+  text-decoration: none;
+}
+.logo strong { color: var(--verde-scuro); font-weight: 800; }
+/* Il segno del logo è un piccolo timbro tondo */
+.logo__segno {
+  display: inline-grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 2px solid var(--inchiostro);
+  background: var(--evidenziatore);
+  color: var(--inchiostro);
+  font-family: var(--font-testo);
+  font-size: 1.35rem;
+  font-weight: 700;
+  box-shadow: 2px 2px 0 var(--inchiostro);
+  transition: transform 0.4s ease;
+}
+.logo:hover .logo__segno { transform: rotate(-180deg); }
+
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.menu a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;              /* area di tocco comoda */
+  padding: 0.4rem 0.75rem;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  color: var(--inchiostro);
+  font-weight: 700;
+  text-decoration: none;
+}
+.menu a:hover { border-color: var(--inchiostro); }
+/* Pagina attuale: evidenziata (non solo col colore: ha anche bordo e ombra) */
+.menu a[aria-current="page"] {
+  background: var(--evidenziatore);
+  border-color: var(--inchiostro);
+  box-shadow: 2px 2px 0 var(--inchiostro);
+}

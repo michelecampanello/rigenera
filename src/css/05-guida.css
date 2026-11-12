@@ -1,0 +1,20 @@
+/* ---------- 5. Layout della guida ---------- */
+.guida {
+  display: grid;
+  gap: 2rem;
+  padding-bottom: 4rem;
+}
+
+@media (min-width: 62rem) {
+  .guida {
+    grid-template-columns: 19.5rem 1fr;
+    align-items: start;
+  }
+  /* Su schermi grandi i filtri restano visibili mentre si scorre l'elenco */
+  .filtri {
+    position: sticky;
+    top: 1rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+  }
+}

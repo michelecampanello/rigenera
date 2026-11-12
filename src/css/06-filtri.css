@@ -1,0 +1,107 @@
+/* ---------- 6. Pannello filtri ---------- */
+/* Il pannello è come uno scontrino: i tre passi sono separati da una linea tratteggiata */
+.filtri {
+  counter-reset: passo;
+  background: var(--carta-chiara);
+  border: 2px solid var(--inchiostro);
+  border-radius: var(--raggio);
+  padding: 1.25rem;
+  box-shadow: var(--ombra);
+}
+.filtri__titolo { font-size: 1.6rem; color: var(--inchiostro); }
+
+.gruppo {
+  border: 0;
+  border-top: 2px dashed var(--bordo);
+  margin: 0 0 1.25rem;
+  padding: 1rem 0 0;
+  min-width: 0;
+}
+.gruppo legend {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  float: left;              /* permette alla legenda di stare dentro il bordo tratteggiato */
+  width: 100%;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  padding: 0;
+}
+.gruppo legend + * { clear: both; }
+/* Ogni gruppo è numerato: 1 cosa fare, 2 che oggetto, 3 che zona */
+.gruppo legend::before {
+  counter-increment: passo;
+  content: counter(passo);
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: var(--inchiostro);
+  color: var(--carta-chiara);
+  font-family: var(--font-titoli);
+  font-size: 1rem;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Il radio vero resta nella pagina (e quindi raggiungibile da tastiera e lettori di schermo),
+   ma è nascosto alla vista: al suo posto si vede l'etichetta a forma di "pillola". */
+.chip { position: relative; }
+.chip input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+}
+.chip span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 44px;            /* area di tocco minima consigliata */
+  padding: 0.5rem 0.9rem;
+  border: 2px solid var(--inchiostro);
+  border-radius: 999px;
+  background: var(--carta-chiara);
+  font-size: 1rem;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background-color 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+.chip:hover span { background: var(--evidenziatore); }
+
+.chip input:checked + span {
+  background: var(--inchiostro);
+  color: var(--carta-chiara);
+  font-weight: 700;
+  box-shadow: 2px 2px 0 var(--evidenziatore), 3px 3px 0 1px var(--inchiostro);
+  transform: translate(-1px, -1px);
+}
+/* Il segno di spunta indica la scelta anche a chi non distingue i colori */
+.chip input:checked + span::before { content: "✓"; }
+
+/* Numero di punti che la pillola troverebbe, con gli altri filtri attivi */
+.chip__conteggio {
+  min-width: 1.6em;
+  padding: 0 0.35em;
+  border: 1.5px solid currentColor;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--inchiostro)
+}
+/* Pillola che non troverebbe nulla: resta selezionabile, ma il bordo tratteggiato
+   la distingue senza abbassare il contrasto del testo */
+.chip--vuota span { border-style: dashed; }
+
+.chip input:focus-visible + span {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}

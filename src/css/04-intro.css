@@ -1,0 +1,80 @@
+/* ---------- 4. Introduzione ---------- */
+.intro {
+  position: relative;
+  padding-block: 2.5rem 3rem;
+  margin-bottom: 2rem;
+}
+/* Linea tratteggiata "da ritagliare" sotto l'introduzione */
+.intro::after {
+  content: "✂";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-left: max(var(--spazio), calc((100% - var(--larghezza-max)) / 2 + var(--spazio)));
+  border-bottom: 2px dashed var(--bordo);
+  color: var(--testo-tenue);
+  font-size: 1.25rem;
+  line-height: 0;
+}
+.intro__riga {
+  display: grid;
+  gap: 1.5rem;
+  align-items: center;
+}
+.intro__occhiello {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.2rem 0.75rem;
+  border: 2px solid var(--inchiostro);
+  border-radius: 999px;
+  background: var(--carta-chiara);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.intro h1 { color: var(--inchiostro); max-width: 16ch; }
+.intro__testo { font-size: 1.25rem; }
+
+/* Sigillo rotante con le quattro azioni */
+.sigillo {
+  width: min(9.5rem, 45vw);
+  justify-self: center;
+  overflow: visible;
+}
+.sigillo__fondo {
+  fill: var(--verde-scuro);
+  stroke: var(--inchiostro);
+  stroke-width: 3;
+}
+.sigillo__linea {
+  fill: var(--evidenziatore);
+  stroke: var(--inchiostro);
+  stroke-width: 3;
+}
+.sigillo__testo {
+  fill: var(--carta-chiara);
+  font-family: var(--font-testo);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.sigillo__centro {
+  fill: var(--inchiostro);
+  font-family: var(--font-testo);
+  font-size: 64px;
+  font-weight: 700;
+}
+.sigillo__giro {
+  transform-origin: 100px 100px;
+  animation: gira 40s linear infinite;
+}
+@keyframes gira { to { transform: rotate(360deg); } }
+
+@media (min-width: 48rem) {
+  .intro { padding-block: 4rem 4.5rem; }
+  .intro__riga { grid-template-columns: 1fr auto; gap: 3rem; }
+  .sigillo { width: 15rem; transform: rotate(-8deg); }
+}

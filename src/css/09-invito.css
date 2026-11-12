@@ -1,0 +1,36 @@
+/* ---------- 9. Sezione invito ---------- */
+.invito {
+  position: relative;
+  margin-top: 2rem;
+  padding-block: 3.5rem;
+  background: var(--verde-scuro);
+  color: #fff;
+}
+/* Bordo superiore a zig-zag, come un foglio strappato */
+.invito::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -14px;
+  height: 14px;
+  background:
+    linear-gradient(-45deg, var(--verde-scuro) 10px, transparent 0) 0 0 / 20px 14px repeat-x,
+    linear-gradient(45deg, var(--verde-scuro) 10px, transparent 0) 0 0 / 20px 14px repeat-x;
+}
+.invito .contenitore {
+  display: grid;
+  gap: 0.25rem;
+  justify-items: start;
+}
+.invito h2 { color: #fff; font-size: clamp(1.75rem, 4.5vw, 2.6rem); max-width: 22ch; }
+.invito p { font-size: 1.2rem; }
+.invito .bottone {
+  background: var(--evidenziatore);
+  color: var(--inchiostro);
+  border-color: var(--inchiostro);
+  box-shadow: 4px 4px 0 var(--inchiostro);
+}
+.invito .bottone:hover { background: #fff; }
+.invito a:not(.bottone) { color: #fff; }
+.invito :focus-visible { outline-color: var(--evidenziatore); }

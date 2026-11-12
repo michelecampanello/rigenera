@@ -1,0 +1,25 @@
+/* ---------- 7. Bottoni ---------- */
+/* Bottoni "a timbro": ombra netta che si schiaccia quando si preme */
+.bottone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid var(--inchiostro);
+  border-radius: 999px;
+  background: var(--verde-scuro);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: var(--ombra);
+  transition: transform 0.12s, box-shadow 0.12s, background-color 0.15s;
+}
+.bottone:hover { background: var(--verde); transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--inchiostro); }
+.bottone:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--inchiostro); }
+.bottone--secondario { background: var(--carta-chiara); color: var(--inchiostro); }
+.bottone--secondario:hover { background: var(--evidenziatore); }
+.filtri .bottone { width: 100%; }

@@ -1,0 +1,50 @@
+/* ==========================================================================
+   Fondazione Rigenera - Guida al riuso
+   Lo stile è diviso in file numerati, da caricare in quest'ordine
+   (l'ordine conta: a parità di selettore vince la regola che viene dopo).
+   Mobile first: le regole base valgono per il telefono,
+   le media query aggiungono il layout per schermi più grandi.
+
+   Idea grafica: "il cartellino del riuso".
+   Carta riciclata, inchiostro, timbri ed evidenziatore: ogni punto della guida
+   è un cartellino appeso all'oggetto, come in un'officina o in un mercatino.
+   ========================================================================== */
+
+/* ---------- 1. Variabili (colori e misure in un solo posto) ---------- */
+:root {
+  /* Carta e inchiostro */
+  --carta: #f3ede1;          /* sfondo della pagina, color carta riciclata */
+  --carta-chiara: #fffcf5;   /* sfondo di schede e pannelli */
+  --carta-scura: #e8dfcd;
+  --inchiostro: #1d1b17;     /* testo principale: contrasto 14.7:1 su --carta */
+  --testo-tenue: #4b4539;    /* contrasto 8.2:1 su --carta */
+
+  --verde-scuro: #1e4a32;    /* colore della Fondazione: contrasto 8.7:1 su --carta */
+  --verde: #2d6b47;
+  --verde-chiaro: #dcebdc;
+  --evidenziatore: #ffd45c;  /* giallo evidenziatore, sempre con testo scuro */
+
+  --bordo: #7a705f;          /* contrasto 4.9:1 su bianco, sufficiente per i controlli */
+  --focus: #b35000;          /* anello di focus arancione, diverso dal verde */
+  --errore: #a4161a;
+
+  /* Colori delle azioni: testo scuro su fondo chiaro, contrasto ≥ 7:1 */
+  --ripara-sfondo: #ffeccc;  --ripara-testo: #6b3e00;
+  --dona-sfondo:   #fde2ea;  --dona-testo:   #7a1238;
+  --scambia-sfondo:#deeafb;  --scambia-testo:#123f7a;
+  --ricicla-sfondo:#d9f0de;  --ricicla-testo:#14532d;
+
+  /* Caratteri: Fraunces per i titoli, Atkinson Hyperlegible per il testo
+     (disegnato apposta per chi ha difficoltà visive). Se non si caricano,
+     si usano i caratteri di sistema. */
+  --font-titoli: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-testo: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+
+  --raggio: 0.5rem;
+  --ombra: 4px 4px 0 var(--inchiostro);        /* ombra "a timbro", netta e senza sfumatura */
+  --ombra-alta: 7px 7px 0 var(--inchiostro);
+  --spazio: 1rem;
+  --larghezza-max: 74rem;
+
+  color-scheme: light;
+}

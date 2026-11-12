@@ -3,7 +3,8 @@
 // I punti sono salvati nel localStorage del browser.
 // - index.html  → legge i punti e li mostra nell'elenco
 // - segnala.html → il modulo aggiunge un nuovo punto all'elenco
-// I filtri restano in CSS: leggono gli attributi data- delle schede.
+// I filtri sono generati da NOMI_AZIONI, NOMI_CATEGORIE e NOMI_ZONE:
+// per aggiungere una categoria o una zona basta una voce qui sotto.
 // ==========================================================================
 
 const CHIAVE_STORAGE = "rigenera-punti";
@@ -34,6 +35,21 @@ const NOMI_ZONE = {
     ovest: "Ovest",
     "non-so": "Non indicata"
 };
+
+// I tre gruppi di filtri, nell'ordine in cui la persona si pone le domande.
+// "campo" è la proprietà del punto da controllare, "tutti" il testo della pillola che azzera il gruppo.
+// "etichette" permette di usare nei filtri e nel modulo un testo diverso da quello delle schede,
+// "etichetteModulo" un testo diverso solo nel modulo di segnalazione.
+const GRUPPI_FILTRI = [
+    { nome: "azione", campo: "azioni", tutti: "Tutto", voci: NOMI_AZIONI,
+      etichette: { scambia: "Scambiare o comprare usato" } },
+    { nome: "categoria", campo: "categorie", tutti: "Tutti", voci: NOMI_CATEGORIE },
+    { nome: "zona", campo: "zona", tutti: "Tutte", voci: NOMI_ZONE,
+      etichetteModulo: { "non-so": "Non lo so" } }
+];
+
+// Valore della pillola "Tutto/Tutti/Tutte"
+const TUTTI = "";
 
 // Punti di esempio: usati solo la prima volta, quando il localStorage è vuoto
 const PUNTI_INIZIALI = [
@@ -194,6 +210,19 @@ function escapeHtml(testo) {
     return div.innerHTML;
 }
 
+// Accetta solo link http/https: blocca indirizzi come "javascript:..."
+function sitoSicuro(sito) {
+    if (!sito) {
+        return "";
+    }
+    try {
+        const url = new URL(sito);
+        return url.protocol === "http:" || url.protocol === "https:" ? url.href : "";
+    } catch (errore) {
+        return "";
+    }
+}
+
 function creaScheda(punto) {
     const idTitolo = "p-" + punto.id;
 
@@ -210,8 +239,14 @@ function creaScheda(punto) {
         ? `<div><dt>Orari</dt><dd>${escapeHtml(punto.orari)}</dd></div>`
         : "";
 
+    // Il sito è facoltativo: compare solo se è un indirizzo http/https valido
+    const indirizzoSito = sitoSicuro(punto.sito);
+    const rigaSito = indirizzoSito
+        ? `<div><dt>Sito</dt><dd><a href="${escapeHtml(indirizzoSito)}" target="_blank" rel="noopener noreferrer">${escapeHtml(new URL(indirizzoSito).hostname)}<span class="solo-lettori"> (si apre in una nuova scheda)</span></a></dd></div>`
+        : "";
+
     return `
-        <li class="punto" data-azione="${punto.azioni.join(" ")}" data-categoria="${punto.categorie.join(" ")}" data-zona="${punto.zona}">
+        <li class="punto" data-id="${escapeHtml(punto.id)}" data-azione="${punto.azioni.join(" ")}" data-categoria="${punto.categorie.join(" ")}" data-zona="${punto.zona}">
             <article class="scheda" aria-labelledby="${idTitolo}">
                 <h3 id="${idTitolo}">${escapeHtml(punto.nome)}</h3>
                 <ul class="etichette" aria-label="Cosa puoi fare e quali oggetti">
@@ -223,15 +258,130 @@ function creaScheda(punto) {
                     <div><dt>Zona</dt><dd>${NOMI_ZONE[punto.zona]}</dd></div>
                     <div><dt>Indirizzo</dt><dd>${escapeHtml(punto.indirizzo)}</dd></div>
                     ${rigaOrari}
+                    ${rigaSito}
                 </dl>
             </article>
         </li>
     `;
 }
 
-function mostraPunti(elenco) {
-    const punti = leggiPunti();
+function mostraPunti(elenco, punti) {
     elenco.innerHTML = punti.map(creaScheda).join("");
+}
+
+// ---------- Filtri (index.html) ----------
+
+// Un punto supera il filtro di un gruppo se il valore scelto è "Tutti"
+// oppure se è tra i suoi valori (azioni e categorie sono elenchi, la zona è un valore solo)
+function superaGruppo(punto, gruppo, valore) {
+    if (valore === TUTTI) {
+        return true;
+    }
+    const valoriPunto = [].concat(punto[gruppo.campo]);
+    return valoriPunto.includes(valore);
+}
+
+function superaFiltri(punto, scelte, gruppoDaIgnorare) {
+    return GRUPPI_FILTRI.every(gruppo =>
+        gruppo === gruppoDaIgnorare || superaGruppo(punto, gruppo, scelte[gruppo.nome])
+    );
+}
+
+function creaPillola(gruppo, valore, testo) {
+    const selezionata = valore === TUTTI ? " checked" : "";
+    return `
+        <label class="chip">
+            <input type="radio" name="${gruppo.nome}" value="${valore}"${selezionata}>
+            <span>${testo} <span class="chip__conteggio"></span></span>
+        </label>
+    `;
+}
+
+function creaPillole(filtri) {
+    GRUPPI_FILTRI.forEach(gruppo => {
+        const contenitore = filtri.querySelector(`[data-gruppo="${gruppo.nome}"]`);
+        if (!contenitore) {
+            return;
+        }
+        const etichette = gruppo.etichette || {};
+        const pillole = Object.entries(gruppo.voci)
+            .map(([valore, nome]) => creaPillola(gruppo, valore, etichette[valore] || nome));
+        contenitore.innerHTML = creaPillola(gruppo, TUTTI, gruppo.tutti) + pillole.join("");
+    });
+}
+
+function leggiScelte(filtri) {
+    const scelte = {};
+    GRUPPI_FILTRI.forEach(gruppo => {
+        const selezionato = filtri.querySelector(`input[name="${gruppo.nome}"]:checked`);
+        scelte[gruppo.nome] = selezionato ? selezionato.value : TUTTI;
+    });
+    return scelte;
+}
+
+// Mostra solo le schede che superano tutti i filtri e restituisce quante sono
+function applicaFiltri(filtri, elenco, punti) {
+    const scelte = leggiScelte(filtri);
+    let visibili = 0;
+
+    punti.forEach(punto => {
+        const scheda = elenco.querySelector(`[data-id="${CSS.escape(punto.id)}"]`);
+        const visibile = superaFiltri(punto, scelte);
+        if (scheda) {
+            scheda.hidden = !visibile;
+        }
+        if (visibile) {
+            visibili++;
+        }
+    });
+
+    aggiornaConteggiPillole(filtri, punti, scelte);
+    return visibili;
+}
+
+// Accanto a ogni pillola: quanti punti si troverebbero scegliendola,
+// tenendo fermi gli altri due gruppi di filtri
+function aggiornaConteggiPillole(filtri, punti, scelte) {
+    GRUPPI_FILTRI.forEach(gruppo => {
+        const candidati = punti.filter(punto => superaFiltri(punto, scelte, gruppo));
+        filtri.querySelectorAll(`input[name="${gruppo.nome}"]`).forEach(input => {
+            const quanti = candidati.filter(punto => superaGruppo(punto, gruppo, input.value)).length;
+            const pillola = input.closest(".chip");
+            pillola.querySelector(".chip__conteggio").innerHTML =
+                `${quanti}<span class="solo-lettori"> ${quanti === 1 ? "punto" : "punti"}</span>`;
+            pillola.classList.toggle("chip--vuota", quanti === 0);
+        });
+    });
+}
+
+// ---------- Annuncio dei risultati (lettori di schermo) ----------
+// Il numero viene scritto nella regione aria-live, che il lettore di schermo legge da solo.
+
+function annunciaRisultati(annuncio, visibili) {
+    if (visibili === 0) {
+        annuncio.textContent = "Nessun punto trovato con questi filtri.";
+    } else if (visibili === 1) {
+        annuncio.textContent = "1 punto trovato.";
+    } else {
+        annuncio.textContent = visibili + " punti trovati.";
+    }
+}
+
+function gestisciFiltri(filtri, elenco, annuncio, punti) {
+    creaPillole(filtri);
+    applicaFiltri(filtri, elenco, punti);   // al caricamento: solo conteggi, nessun annuncio
+
+    const aggiorna = () => {
+        const visibili = applicaFiltri(filtri, elenco, punti);
+        if (annuncio) {
+            annunciaRisultati(annuncio, visibili);
+        }
+    };
+
+    filtri.addEventListener("change", aggiorna);
+    // L'evento "reset" arriva prima che i campi tornino ai valori iniziali:
+    // si aspetta il ciclo successivo per leggere le scelte giuste
+    filtri.addEventListener("reset", () => setTimeout(aggiorna));
 }
 
 // ---------- Modulo di segnalazione (segnala.html) ----------
@@ -246,7 +396,35 @@ function creaId(nome) {
     return base + "-" + Date.now();
 }
 
+// Le caselle (azioni, categorie) e le opzioni della zona nascono dagli stessi
+// GRUPPI_FILTRI della guida: una nuova voce compare sia nei filtri sia qui.
+function vociModulo(gruppo) {
+    const etichette = Object.assign({}, gruppo.etichette, gruppo.etichetteModulo);
+    return Object.entries(gruppo.voci).map(([valore, nome]) => [valore, etichette[valore] || nome]);
+}
+
+function creaCampiModulo(modulo) {
+    GRUPPI_FILTRI.forEach(gruppo => {
+        const contenitore = modulo.querySelector(`[data-gruppo="${gruppo.nome}"]`);
+        if (!contenitore) {
+            return;
+        }
+        const voci = vociModulo(gruppo);
+        if (contenitore.tagName === "SELECT") {
+            // Si aggiungono dopo l'opzione "Scegli una zona", che resta la prima
+            voci.forEach(([valore, testo]) => contenitore.add(new Option(testo, valore)));
+        } else {
+            contenitore.insertAdjacentHTML("beforeend", voci
+                .map(([valore, testo]) =>
+                    `<label class="scelta"><input type="checkbox" name="${gruppo.nome}" value="${valore}"> ${testo}</label>`)
+                .join(""));
+        }
+    });
+}
+
 function gestisciModulo(modulo) {
+    creaCampiModulo(modulo);
+
     const messaggio = document.getElementById("messaggio-modulo");
 
     modulo.addEventListener("submit", function (evento) {
@@ -304,7 +482,13 @@ function gestisciModulo(modulo) {
 
 const elencoPunti = document.getElementById("elenco-punti");
 if (elencoPunti) {
-    mostraPunti(elencoPunti);
+    const punti = leggiPunti();
+    mostraPunti(elencoPunti, punti);
+
+    const filtri = document.querySelector(".filtri");
+    if (filtri) {
+        gestisciFiltri(filtri, elencoPunti, document.getElementById("annuncio-risultati"), punti);
+    }
 }
 
 const moduloSegnala = document.getElementById("modulo-segnala");
