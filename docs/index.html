@@ -26,6 +26,11 @@
   <link rel="stylesheet" href="css/10-modulo.css">
   <link rel="stylesheet" href="css/11-piede.css">
   <link rel="stylesheet" href="css/12-accessibilita.css">
+  <link rel="stylesheet" href="css/13-ricerca-preferiti.css">
+  <link rel="stylesheet" href="css/14-tema-scuro.css">
+  <!-- tema.js senza defer: applica il tema prima che la pagina venga disegnata -->
+  <script src="js/tema.js"></script>
+  <script src="js/preferiti.js" defer></script>
   <script src="js/script.js" defer></script>
 </head>
 <body>
@@ -43,6 +48,10 @@
           <li><a href="segnala.html">Segnala un punto</a></li>
         </ul>
       </nav>
+      <button type="button" id="cambia-tema" class="tema" aria-pressed="false" hidden>
+        <span class="tema__icona" aria-hidden="true"></span>
+        Tema scuro
+      </button>
     </div>
   </header>
 
@@ -74,6 +83,12 @@
       <form class="filtri" aria-labelledby="titolo-filtri">
         <h2 id="titolo-filtri" class="filtri__titolo">Cosa ti serve?</h2>
 
+        <div class="cerca">
+          <label for="cerca-testo">Cerca per nome o parola</label>
+          <input type="search" id="cerca-testo" name="testo" autocomplete="off" aria-describedby="aiuto-cerca">
+          <p class="aiuto" id="aiuto-cerca">Esempio: bici, vestiti, Via Roma.</p>
+        </div>
+
         <fieldset class="gruppo">
           <legend>Cosa vuoi fare</legend>
           <div class="chips" data-gruppo="azione"></div>
@@ -89,6 +104,13 @@
           <div class="chips" data-gruppo="zona"></div>
         </fieldset>
 
+        <div class="gruppo gruppo--preferiti">
+          <label class="chip">
+            <input type="checkbox" name="solo-preferiti">
+            <span>Solo i miei preferiti</span>
+          </label>
+        </div>
+
         <button type="reset" class="bottone bottone--secondario">Azzera i filtri</button>
       </form>
 
@@ -98,6 +120,9 @@
         <noscript>
           <p class="messaggio messaggio--errore">Per vedere l'elenco dei punti è necessario attivare JavaScript nel browser.</p>
         </noscript>
+
+        <!-- Compare solo quando ricerca e filtri non trovano nulla (gestito da script.js) -->
+        <p id="nessun-risultato" class="vuoto" hidden></p>
 
         <ol id="elenco-punti" class="elenco" role="list">
 

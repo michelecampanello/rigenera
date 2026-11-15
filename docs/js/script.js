@@ -260,6 +260,9 @@ function creaScheda(punto) {
                     ${rigaOrari}
                     ${rigaSito}
                 </dl>
+                <div class="scheda__azioni">
+                    ${creaBottonePreferito(punto)}
+                </div>
             </article>
         </li>
     `;
@@ -281,10 +284,35 @@ function superaGruppo(punto, gruppo, valore) {
     return valoriPunto.includes(valore);
 }
 
+// Minuscolo e senza accenti: "Caffè" e "caffe" diventano uguali
+function normalizzaTesto(testo) {
+    return testo
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[̀-ͯ]/g, "");
+}
+
+// Ricerca libera su nome, descrizione e indirizzo.
+// Con più parole ("bici nord") il punto deve contenerle tutte.
+function superaRicerca(punto, testo) {
+    if (!testo) {
+        return true;
+    }
+    const testoPunto = normalizzaTesto([punto.nome, punto.descrizione, punto.indirizzo].join(" "));
+    return testo.split(/\s+/).every(parola => testoPunto.includes(parola));
+}
+
+// "preferiti" è null se la casella "Solo i miei preferiti" non è spuntata
+function superaPreferiti(punto, preferiti) {
+    return !preferiti || preferiti.includes(punto.id);
+}
+
 function superaFiltri(punto, scelte, gruppoDaIgnorare) {
-    return GRUPPI_FILTRI.every(gruppo =>
-        gruppo === gruppoDaIgnorare || superaGruppo(punto, gruppo, scelte[gruppo.nome])
-    );
+    return superaRicerca(punto, scelte.testo)
+        && superaPreferiti(punto, scelte.preferiti)
+        && GRUPPI_FILTRI.every(gruppo =>
+            gruppo === gruppoDaIgnorare || superaGruppo(punto, gruppo, scelte[gruppo.nome])
+        );
 }
 
 function creaPillola(gruppo, valore, testo) {
@@ -316,6 +344,13 @@ function leggiScelte(filtri) {
         const selezionato = filtri.querySelector(`input[name="${gruppo.nome}"]:checked`);
         scelte[gruppo.nome] = selezionato ? selezionato.value : TUTTI;
     });
+
+    const campoRicerca = filtri.querySelector('input[name="testo"]');
+    scelte.testo = campoRicerca ? normalizzaTesto(campoRicerca.value.trim()) : "";
+
+    const soloPreferiti = filtri.querySelector('input[name="solo-preferiti"]');
+    scelte.preferiti = soloPreferiti && soloPreferiti.checked ? leggiPreferiti() : null;
+
     return scelte;
 }
 
@@ -367,21 +402,59 @@ function annunciaRisultati(annuncio, visibili) {
     }
 }
 
-function gestisciFiltri(filtri, elenco, annuncio, punti) {
+// Messaggio visibile a schermo quando nessun punto supera ricerca e filtri
+// (l'annuncio aria-live sopra resta per i lettori di schermo)
+function mostraNessunRisultato(riquadro, visibili, scelte) {
+    if (!riquadro) {
+        return;
+    }
+    riquadro.hidden = visibili > 0;
+    if (visibili > 0) {
+        return;
+    }
+    if (scelte.preferiti && scelte.preferiti.length === 0) {
+        riquadro.textContent = "Non hai ancora salvato nessun punto. Premi «♡ Preferito» su una scheda per ritrovarla qui.";
+    } else {
+        riquadro.textContent = "Nessun punto corrisponde alla ricerca e ai filtri scelti. Prova con un'altra parola o scegli «Tutto» in uno dei filtri.";
+    }
+}
+
+// Restituisce la funzione che riapplica i filtri, usata anche dai preferiti
+function gestisciFiltri(filtri, elenco, annuncio, punti, nessunRisultato) {
     creaPillole(filtri);
-    applicaFiltri(filtri, elenco, punti);   // al caricamento: solo conteggi, nessun annuncio
+    // Al caricamento: solo conteggi e messaggio, nessun annuncio
+    const visibiliIniziali = applicaFiltri(filtri, elenco, punti);
+    mostraNessunRisultato(nessunRisultato, visibiliIniziali, leggiScelte(filtri));
 
     const aggiorna = () => {
         const visibili = applicaFiltri(filtri, elenco, punti);
+        mostraNessunRisultato(nessunRisultato, visibili, leggiScelte(filtri));
         if (annuncio) {
             annunciaRisultati(annuncio, visibili);
         }
     };
 
     filtri.addEventListener("change", aggiorna);
+
+    // La ricerca si aggiorna mentre si scrive, con una piccola pausa
+    // per non far annunciare al lettore di schermo ogni singola lettera
+    let attesa;
+    filtri.addEventListener("input", evento => {
+        if (evento.target.name !== "testo") {
+            return;
+        }
+        clearTimeout(attesa);
+        attesa = setTimeout(aggiorna, 300);
+    });
+
+    // Invio nel campo di ricerca: niente ricaricamento della pagina
+    filtri.addEventListener("submit", evento => evento.preventDefault());
+
     // L'evento "reset" arriva prima che i campi tornino ai valori iniziali:
     // si aspetta il ciclo successivo per leggere le scelte giuste
     filtri.addEventListener("reset", () => setTimeout(aggiorna));
+
+    return aggiorna;
 }
 
 // ---------- Modulo di segnalazione (segnala.html) ----------
@@ -486,9 +559,17 @@ if (elencoPunti) {
     mostraPunti(elencoPunti, punti);
 
     const filtri = document.querySelector(".filtri");
+    let aggiornaFiltri = () => {};
     if (filtri) {
-        gestisciFiltri(filtri, elencoPunti, document.getElementById("annuncio-risultati"), punti);
+        aggiornaFiltri = gestisciFiltri(
+            filtri,
+            elencoPunti,
+            document.getElementById("annuncio-risultati"),
+            punti,
+            document.getElementById("nessun-risultato")
+        );
     }
+    gestisciPreferiti(elencoPunti, aggiornaFiltri);
 }
 
 const moduloSegnala = document.getElementById("modulo-segnala");
