@@ -5,8 +5,10 @@ Sito statico in **HTML, CSS e un po' di JavaScript**. Nessun back end, nessun da
 ```
 docs/index.html         → la guida: filtri + elenco dei punti
 docs/segnala.html       → modulo con cui i cittadini segnalano nuovi punti
-docs/css/01-…12-*.css   → lo stile, diviso per sezione (variabili, base, testata, filtri, elenco, modulo…)
-docs/js/script.js       → genera le schede, salva le segnalazioni, annuncia i risultati
+docs/css/01-…14-*.css   → lo stile, diviso per sezione (variabili, base, testata, filtri, elenco, modulo, ricerca e preferiti, tema scuro)
+docs/js/script.js       → genera le schede, filtri e ricerca, salva le segnalazioni, annuncia i risultati
+docs/js/preferiti.js    → salva e rilegge i punti preferiti (localStorage)
+docs/js/tema.js         → tema chiaro/scuro, con la scelta salvata nel browser
 docs/img/               → favicon (SVG, ICO, PNG per la schermata Home)
 ```
 
@@ -65,12 +67,18 @@ Per aggiungere una **nuova categoria o zona** basta una voce in `NOMI_CATEGORIE`
 - Un **campo-trappola anti-spam** (honeypot), invisibile alle persone.
 - **Da fare:** oggi le segnalazioni vengono pubblicate subito, senza la verifica della Fondazione promessa nel testo del modulo. Serve uno stato "da verificare" (vedi fase 2).
 
+### 5. Ricerca, preferiti e tema scuro
+
+- **Ricerca testuale** in cima ai filtri: cerca nel nome, nella descrizione e nell'indirizzo, senza distinguere maiuscole e accenti ("cafe" trova "Café"). Con più parole il punto deve contenerle tutte. Si combina con i tre gruppi di filtri e i conteggi delle pillole ne tengono conto.
+- **Messaggio "nessun risultato" visibile** sopra l'elenco quando ricerca e filtri non trovano nulla, oltre all'annuncio per i lettori di schermo.
+- **Preferiti**: ogni scheda ha il bottone "♡ Preferito" (un vero `<button>` con `aria-pressed`). Nel `localStorage` si salva solo l'elenco degli `id` dei punti, non le schede. Al primo avvio, quando non c'è ancora nulla di salvato, si parte da un elenco vuoto. La pillola "Solo i miei preferiti" mostra solo i punti salvati.
+- **Tema scuro**: bottone "Tema scuro" nella testata di entrambe le pagine. Se l'utente non ha mai scelto, il sito segue l'impostazione del sistema (`prefers-color-scheme`). Il tema ridefinisce le variabili di `01-variabili.css`, quindi gli altri file CSS non cambiano. Contrasti del testo ≥ 7:1 anche nel tema scuro; la stampa resta sempre chiara.
+
 ---
 
 ## Limiti noti
 
 - **Dati solo nel browser**: il `localStorage` vive in un solo browser di un solo dispositivo. Un punto segnalato da un cittadino non arriva né alla Fondazione né agli altri visitatori.
-- **Messaggio "nessun risultato"**: a schermo non c'è ancora un messaggio dedicato (il lettore di schermo invece annuncia "Nessun punto trovato"). Il contatore mostra comunque "0" accanto all'invito a togliere un filtro o a segnalare un punto.
 - **Checkbox "Cosa si può fare?"**: l'HTML non permette di rendere obbligatoria "almeno una" casella di un gruppo, per questo il campo è facoltativo.
 - **Molti punti**: sopra il centinaio di schede, mantenerle a mano in un array dentro `script.js` diventa scomodo.
 
@@ -80,7 +88,7 @@ Il markup e il CSS di questa versione restano validi: cambia solo **dove vivono 
 
 1. **Dati in un file separato** (`punti.json` o un foglio Google), da cui un generatore di siti statici (es. **Eleventy**) crea l'HTML in automatico a ogni modifica. Il CSS dei filtri resta identico.
 2. **Pannello di modifica senza codice** con un CMS headless gratuito (es. **Decap CMS**): Giulia aggiunge e modifica i punti da un modulo web, senza mai aprire un file HTML.
-3. **Più JavaScript progressivo** per mostrare il messaggio "nessun risultato", aggiungere una ricerca testuale libera e, più avanti, una mappa.
+3. **Più JavaScript progressivo**, per esempio una mappa dei punti.
 4. Le segnalazioni del modulo possono arrivare direttamente come bozze nel CMS, invece che per e-mail.
 
 > Nota: i punti presenti nella guida sono **dati di esempio** inventati, da sostituire con quelli reali della Fondazione.
