@@ -1,0 +1,102 @@
+/* ---------- 14. Tema scuro ---------- */
+/* Il bottone imposta data-tema="scuro" su <html> (vedi js/tema.js).
+   Quasi tutto il sito usa le variabili di 01-variabili.css: basta ridefinirle.
+   Le poche regole sotto correggono i punti dove un colore è scritto a mano
+   o dove il testo deve restare scuro (per esempio sul giallo evidenziatore).
+   Tutto è dentro @media screen: la stampa resta sempre chiara.
+   Contrasti del testo verificati: tutti ≥ 7:1, come nel tema chiaro. */
+
+/* Bottone del tema nella testata */
+.tema {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  padding: 0.4rem 0.9rem;
+  border: 2px solid var(--inchiostro);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--inchiostro);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.tema[hidden] { display: none; }
+.tema:hover { background: var(--carta-scura); }
+.tema__icona::before { content: "☾"; }
+/* Attivo: colori invertiti e segno di spunta, come le pillole dei filtri */
+.tema[aria-pressed="true"] {
+  background: var(--inchiostro);
+  color: var(--carta-chiara);
+}
+.tema[aria-pressed="true"] .tema__icona::before { content: "✓"; }
+
+@media print {
+  .tema { display: none !important; }
+}
+
+@media screen {
+  :root[data-tema="scuro"] {
+    /* Cartone scuro e gesso al posto di carta e inchiostro */
+    --carta: #1b1915;
+    --carta-chiara: #26231d;
+    --carta-scura: #36312a;
+    --inchiostro: #f1ebdd;        /* 14.8:1 su --carta */
+    --testo-tenue: #cfc5b0;       /* 9.2:1 su --carta-chiara */
+
+    --verde-chiaro: #1f3a2a;
+    --verde-testo: #9fd8b1;       /* titoli e link: 10.8:1 su --carta */
+    --bordo: #9a8f7b;             /* 4.9:1, sufficiente per i controlli */
+    --focus: #ff9a4d;
+    --errore: #ff9b94;
+
+    /* Azioni: fondo scuro e testo chiaro, contrasto ≥ 8.9:1 */
+    --ripara-sfondo: #4a3210;  --ripara-testo: #ffd9a3;
+    --dona-sfondo:   #4d1628;  --dona-testo:   #ffc4d6;
+    --scambia-sfondo:#14304f;  --scambia-testo:#c4dcff;
+    --ricicla-sfondo:#163f26;  --ricicla-testo:#b8eec8;
+
+    color-scheme: dark;           /* barre di scorrimento e controlli del browser scuri */
+  }
+
+  /* :where() non aggiunge specificità: queste regole sostituiscono solo
+     quelle "di base" e non quelle più precise già scritte negli altri file. */
+
+  /* Titoli e link: il verde scuro della Fondazione non si legge sul fondo scuro */
+  :where([data-tema="scuro"]) :is(h1, h2, h3),
+  :where([data-tema="scuro"]) a,
+  :where([data-tema="scuro"]) .logo strong { color: var(--verde-testo); }
+
+  /* Sul giallo evidenziatore il testo resta sempre scuro */
+  :where([data-tema="scuro"]) .logo__segno,
+  :where([data-tema="scuro"]) .menu a[aria-current="page"],
+  :where([data-tema="scuro"]) .chip:hover span,
+  :where([data-tema="scuro"]) .bottone--secondario:hover,
+  :where([data-tema="scuro"]) .esito__conteggio::after,
+  :where([data-tema="scuro"]) .invito .bottone { color: #1d1b17; }
+
+  /* Tratto di evidenziatore nel titolo: ambra scura sotto il testo chiaro */
+  :where([data-tema="scuro"]) .evidenzia { --evidenziatore: #7a5a0c; }
+
+  :where([data-tema="scuro"]) .sigillo__testo { fill: var(--inchiostro); }
+  :where([data-tema="scuro"]) .sigillo__centro { fill: #1d1b17; }
+
+  /* Campi del modulo: in 10-modulo.css lo sfondo è bianco fisso */
+  :where([data-tema="scuro"]) .modulo input[type="text"],
+  :where([data-tema="scuro"]) .modulo input[type="email"],
+  :where([data-tema="scuro"]) .modulo input[type="url"],
+  :where([data-tema="scuro"]) .modulo select,
+  :where([data-tema="scuro"]) .modulo textarea { background: var(--carta); }
+
+  :where([data-tema="scuro"]) .modulo :user-invalid,
+  :where([data-tema="scuro"]) .messaggio--errore { background: #3a1416; }
+
+  /* Piè di pagina: nel tema chiaro è scuro, qui resta scuro (non diventa chiaro) */
+  :where([data-tema="scuro"]) .piede {
+    background: #0f0e0b;
+    color: var(--inchiostro);
+    border-top: 2px solid var(--bordo);
+  }
+  :where([data-tema="scuro"]) .piede a { color: var(--evidenziatore); }
+}

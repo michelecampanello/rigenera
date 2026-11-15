@@ -26,6 +26,9 @@
   <link rel="stylesheet" href="css/10-modulo.css">
   <link rel="stylesheet" href="css/11-piede.css">
   <link rel="stylesheet" href="css/12-accessibilita.css">
+  <link rel="stylesheet" href="css/14-tema-scuro.css">
+  <!-- tema.js senza defer: applica il tema prima che la pagina venga disegnata -->
+  <script src="js/tema.js"></script>
   <script src="js/script.js" defer></script>
 </head>
 <body>
@@ -43,6 +46,10 @@
           <li><a href="segnala.html" aria-current="page">Segnala un punto</a></li>
         </ul>
       </nav>
+      <button type="button" id="cambia-tema" class="tema" aria-pressed="false" hidden>
+        <span class="tema__icona" aria-hidden="true"></span>
+        Tema scuro
+      </button>
     </div>
   </header>
 
