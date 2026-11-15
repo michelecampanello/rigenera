@@ -1,0 +1,77 @@
+/* ---------- 13. Ricerca, preferiti e messaggio "nessun risultato" ---------- */
+
+/* Campo di ricerca in cima al pannello dei filtri */
+.cerca { margin-bottom: 1.25rem; }
+.cerca label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-weight: 700;
+}
+.cerca input {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  padding: 0.65rem 0.8rem;
+  border: 2px solid var(--inchiostro);
+  border-radius: var(--raggio);
+  background: var(--carta);
+  color: var(--inchiostro);
+  font: inherit;
+}
+.cerca input:focus-visible { box-shadow: 4px 4px 0 var(--evidenziatore); }
+
+/* "Solo i miei preferiti": usa lo stile delle pillole (casella vera, nascosta alla vista) */
+.gruppo--preferiti { padding-top: 1rem; }
+
+/* Bottone "♡ Preferito" in fondo alla scheda */
+.scheda__azioni {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+.preferito {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;             /* area di tocco comoda */
+  padding: 0.4rem 0.9rem;
+  border: 2px solid var(--inchiostro);
+  border-radius: 999px;
+  background: var(--carta-chiara);
+  color: var(--inchiostro);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.preferito:hover { background: var(--carta-scura); }
+.preferito__icona {
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--dona-testo);
+}
+/* Attivo: cuore pieno, fondo colorato e ombra a timbro (non solo il colore cambia) */
+.preferito[aria-pressed="true"] {
+  background: var(--dona-sfondo);
+  color: var(--dona-testo);
+  box-shadow: 2px 2px 0 var(--inchiostro);
+}
+
+/* Messaggio quando ricerca e filtri non trovano nulla */
+.vuoto {
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.25rem;
+  border: 2px dashed var(--inchiostro);
+  border-radius: var(--raggio);
+  background: var(--carta-chiara);
+  font-weight: 700;
+}
+
+@media (forced-colors: active) {
+  .preferito, .vuoto { border: 2px solid CanvasText; }
+  .preferito[aria-pressed="true"] { border-width: 4px; }
+}
+
+@media print {
+  .scheda__azioni, .vuoto { display: none !important; }
+}
