@@ -25,7 +25,7 @@
 .tema[hidden] { display: none; }
 .tema:hover { background: var(--carta-scura); }
 .tema__icona::before { content: "☾"; }
-/* Attivo: colori invertiti e segno di spunta, come le pillole dei filtri */
+/* Attivo: colori invertiti e segno di spunta, come la pillola dei preferiti */
 .tema[aria-pressed="true"] {
   background: var(--inchiostro);
   color: var(--carta-chiara);
@@ -93,9 +93,6 @@
   :where([data-tema="scuro"]) .modulo input[type="url"],
   :where([data-tema="scuro"]) .modulo select,
   :where([data-tema="scuro"]) .modulo textarea { background: var(--carta); }
-
-  /* Barra di scorrimento del pannello filtri: senza colore resterebbe bianca */
-  :where([data-tema="scuro"]) .filtri { scrollbar-color: var(--bordo) var(--carta-chiara); }
 
   /* Caselle del modulo: il verde della Fondazione è troppo scuro sul fondo scuro */
   :where([data-tema="scuro"]) .scelta input { accent-color: var(--verde-testo); }

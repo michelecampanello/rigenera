@@ -1,9 +1,9 @@
 // ==========================================================================
 // Filtri, ricerca e conteggi (index.html)
-// Le pillole nascono da GRUPPI_FILTRI di comune.js. Ogni cambio di filtro
-// nasconde le schede che non corrispondono, aggiorna i conteggi e
-// annuncia il numero di punti ai lettori di schermo.
-// Usa: comune.js, preferiti.js (leggiPreferiti), filtri-telefono.js.
+// Le opzioni dei tre menu nascono da GRUPPI_FILTRI di comune.js. Ogni
+// cambio di filtro nasconde le schede che non corrispondono, aggiorna i
+// conteggi nelle opzioni e annuncia il numero di punti ai lettori di schermo.
+// Usa: comune.js, preferiti.js (leggiPreferiti).
 // ==========================================================================
 
 
@@ -48,34 +48,32 @@ function superaFiltri(punto, scelte, gruppoDaIgnorare) {
         );
 }
 
-function creaPillola(gruppo, valore, testo) {
-    const selezionata = valore === TUTTI ? " checked" : "";
-    return `
-        <label class="chip">
-            <input type="radio" name="${gruppo.nome}" value="${valore}"${selezionata}>
-            <span>${testo} <span class="chip__conteggio"></span></span>
-        </label>
-    `;
-}
-
-function creaPillole(filtri) {
+// Riempie i tre menu a tendina. La prima opzione ("Tutto", "Tutti", "Tutte")
+// è quella iniziale, quindi "Azzera i filtri" (un reset del form) torna lì.
+// Il testo senza numero resta in data-testo: il conteggio viene aggiunto dopo.
+function creaMenu(filtri) {
     GRUPPI_FILTRI.forEach(gruppo => {
-        const contenitore = filtri.querySelector(`[data-gruppo="${gruppo.nome}"]`);
-        if (!contenitore) {
+        const menu = filtri.querySelector(`select[data-gruppo="${gruppo.nome}"]`);
+        if (!menu) {
             return;
         }
         const etichette = gruppo.etichette || {};
-        const pillole = Object.entries(gruppo.voci)
-            .map(([valore, nome]) => creaPillola(gruppo, valore, etichette[valore] || nome));
-        contenitore.innerHTML = creaPillola(gruppo, TUTTI, gruppo.tutti) + pillole.join("");
+        const voci = [[TUTTI, gruppo.tutti]].concat(
+            Object.entries(gruppo.voci).map(([valore, nome]) => [valore, etichette[valore] || nome])
+        );
+        voci.forEach(([valore, testo]) => {
+            const opzione = new Option(testo, valore, valore === TUTTI, valore === TUTTI);
+            opzione.dataset.testo = testo;
+            menu.add(opzione);
+        });
     });
 }
 
 function leggiScelte(filtri) {
     const scelte = {};
     GRUPPI_FILTRI.forEach(gruppo => {
-        const selezionato = filtri.querySelector(`input[name="${gruppo.nome}"]:checked`);
-        scelte[gruppo.nome] = selezionato ? selezionato.value : TUTTI;
+        const menu = filtri.querySelector(`select[name="${gruppo.nome}"]`);
+        scelte[gruppo.nome] = menu ? menu.value : TUTTI;
     });
 
     const campoRicerca = filtri.querySelector('input[name="testo"]');
@@ -103,23 +101,31 @@ function applicaFiltri(filtri, elenco, punti) {
         }
     });
 
-    aggiornaConteggiPillole(filtri, punti, scelte);
+    aggiornaConteggiMenu(filtri, punti, scelte);
     return visibili;
 }
 
-// Accanto a ogni pillola: quanti punti si troverebbero scegliendola,
-// tenendo fermi gli altri due gruppi di filtri
-function aggiornaConteggiPillole(filtri, punti, scelte) {
+// In ogni opzione: quanti punti si troverebbero scegliendola,
+// tenendo fermi gli altri filtri. Es. "Riparare (5)".
+function aggiornaConteggiMenu(filtri, punti, scelte) {
     GRUPPI_FILTRI.forEach(gruppo => {
+        const menu = filtri.querySelector(`select[name="${gruppo.nome}"]`);
+        if (!menu) {
+            return;
+        }
         const candidati = punti.filter(punto => superaFiltri(punto, scelte, gruppo));
-        filtri.querySelectorAll(`input[name="${gruppo.nome}"]`).forEach(input => {
-            const quanti = candidati.filter(punto => superaGruppo(punto, gruppo, input.value)).length;
-            const pillola = input.closest(".chip");
-            pillola.querySelector(".chip__conteggio").innerHTML =
-                `${quanti}<span class="solo-lettori"> ${quanti === 1 ? "punto" : "punti"}</span>`;
-            pillola.classList.toggle("chip--vuota", quanti === 0);
+        Array.from(menu.options).forEach(opzione => {
+            const quanti = candidati.filter(punto => superaGruppo(punto, gruppo, opzione.value)).length;
+            opzione.textContent = `${opzione.dataset.testo} (${quanti})`;
         });
     });
+}
+
+// C'è qualcosa da azzerare? (un menu non su "Tutti", una parola cercata, i preferiti)
+function filtriAttivi(scelte) {
+    return Boolean(scelte.testo)
+        || Boolean(scelte.preferiti)
+        || GRUPPI_FILTRI.some(gruppo => scelte[gruppo.nome] !== TUTTI);
 }
 
 // ---------- Annuncio dei risultati (lettori di schermo) ----------
@@ -163,28 +169,25 @@ function testoPunti(quanti) {
 
 // Restituisce la funzione che riapplica i filtri, usata anche dai preferiti
 function gestisciFiltri(filtri, elenco, annuncio, punti, nessunRisultato) {
-    creaPillole(filtri);
-    gestisciPannello(filtri);
+    creaMenu(filtri);
 
     const conteggio = document.getElementById("conteggio-risultati");
-    const contenitoreAttivi = filtri.querySelector(".filtri-attivi");
-    const mostra = filtri.querySelector(".mostra-punti");
+    // Il bottone sta vicino al conteggio, fuori dal form (collegato con form="filtri")
+    const azzera = document.querySelector(`button[type="reset"][form="${filtri.id}"]`);
 
     // Aggiorna tutto quello che dipende dai filtri; "annuncia" è falso al caricamento
     const aggiorna = (annuncia = true) => {
+        const scelte = leggiScelte(filtri);
         const visibili = applicaFiltri(filtri, elenco, punti);
-        mostraNessunRisultato(nessunRisultato, visibili, leggiScelte(filtri));
+        mostraNessunRisultato(nessunRisultato, visibili, scelte);
         if (conteggio) {
             conteggio.hidden = false;
             conteggio.textContent = visibili === punti.length
                 ? `${testoPunti(visibili)} in tutto`
                 : `${testoPunti(visibili)} su ${punti.length}`;
         }
-        if (mostra) {
-            mostra.textContent = visibili === 0 ? "Nessun punto" : `Vedi ${testoPunti(visibili).toLowerCase()}`;
-        }
-        if (contenitoreAttivi) {
-            mostraFiltriAttivi(filtri, contenitoreAttivi, aggiorna);
+        if (azzera) {
+            azzera.hidden = !filtriAttivi(scelte);
         }
         if (annuncia && annuncio) {
             annunciaRisultati(annuncio, visibili);
@@ -211,8 +214,17 @@ function gestisciFiltri(filtri, elenco, annuncio, punti, nessunRisultato) {
     filtri.addEventListener("submit", evento => evento.preventDefault());
 
     // L'evento "reset" arriva prima che i campi tornino ai valori iniziali:
-    // si aspetta il ciclo successivo per leggere le scelte giuste
-    filtri.addEventListener("reset", () => setTimeout(aggiorna));
+    // si aspetta il ciclo successivo per leggere le scelte giuste.
+    // "Azzera" poi sparisce: se aveva il focus, il focus passa alla ricerca.
+    filtri.addEventListener("reset", () => {
+        const daAzzera = document.activeElement === azzera;
+        setTimeout(() => {
+            aggiorna();
+            if (daAzzera) {
+                filtri.querySelector('input[name="testo"]').focus();
+            }
+        });
+    });
 
     return aggiorna;
 }

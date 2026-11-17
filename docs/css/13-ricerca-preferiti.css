@@ -1,12 +1,6 @@
 /* ---------- 13. Ricerca, preferiti e messaggio "nessun risultato" ---------- */
 
-/* Campo di ricerca in cima al pannello dei filtri */
-.cerca { margin-bottom: 1.25rem; }
-.cerca label {
-  display: block;
-  margin-bottom: 0.35rem;
-  font-weight: 700;
-}
+/* Campo di ricerca nella barra dei filtri (l'etichetta è in 06-filtri.css) */
 .cerca input {
   display: block;
   width: 100%;
@@ -19,9 +13,6 @@
   font: inherit;
 }
 .cerca input:focus-visible { box-shadow: 4px 4px 0 var(--evidenziatore); }
-
-/* "Solo i miei preferiti": usa lo stile delle pillole (casella vera, nascosta alla vista) */
-.gruppo--preferiti { padding-top: 1rem; }
 
 /* Bottone "♡ Preferito": nella finestra dei dettagli con il testo,
    nella scheda dell'elenco solo il cuore (preferito--compatto) */
@@ -80,10 +71,4 @@
   .scheda__piede, .vuoto { display: none !important; }
 }
 
-/* Ricerca e bottone "Filtri" sulla stessa riga */
-.cerca__riga {
-  display: flex;
-  gap: 0.5rem;
-}
-.cerca__riga input { flex: 1; min-width: 0; }
 .cerca input::placeholder { color: var(--testo-tenue); opacity: 1; }

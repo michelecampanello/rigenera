@@ -1,57 +1,108 @@
-/* ---------- 6. Pannello filtri ---------- */
-/* Il pannello è come uno scontrino: i tre passi sono separati da una linea tratteggiata */
+/* ---------- 6. Barra dei filtri ---------- */
+/* Due righe compatte: ricerca e preferiti, poi i tre menu a tendina.
+   Su schermi grandi le due righe stanno affiancate su una riga sola.
+   I menu sono <select> veri: tastiera, lettori di schermo e il selettore
+   del telefono funzionano senza codice in più. */
 .filtri {
-  counter-reset: passo;
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem 1rem;
   background: var(--carta-chiara);
   border: 2px solid var(--tratto);
   border-radius: var(--raggio);
-  padding: 1.25rem;
   box-shadow: var(--ombra);
 }
-.filtri__titolo { font-size: 1.6rem; color: var(--inchiostro); }
 
-.gruppo {
-  border: 0;
-  border-top: 2px dashed var(--bordo);
-  margin: 0 0 1.25rem;
-  padding: 1rem 0 0;
-  min-width: 0;
-}
-.gruppo legend {
+.filtri__riga--cerca {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 0.5rem;
-  float: left;              /* permette alla legenda di stare dentro il bordo tratteggiato */
-  width: 100%;
+}
+.filtri__riga--cerca .cerca { flex: 1; min-width: 0; }
+
+.filtri__riga--menu {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+/* Telefoni: tre menu affiancati sarebbero troppo stretti per leggerli.
+   Le due righe si "sciolgono" (display: contents) in una griglia 2×2:
+   ricerca a tutta larghezza, poi i tre menu e "Preferiti" nell'ultima casella
+   (order lo sposta in fondo senza cambiare l'ordine nell'HTML). */
+@media (max-width: 47.99rem) {
+  .filtri {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem 0.5rem;
+    align-items: end;
+  }
+  .filtri__riga { display: contents; }
+  .filtri .cerca { grid-column: 1 / -1; }
+  .chip--preferiti { order: 1; }
+  .chip--preferiti > span { width: 100%; justify-content: center; }
+}
+
+@media (min-width: 62rem) {
+  .filtri {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 2fr);
+    gap: 1rem;
+    align-items: end;
+  }
+}
+
+/* Etichette piccole sopra ricerca e menu: se lo spazio manca, "…" invece di andare a capo */
+.filtri label:not(.chip) {
+  display: block;
+  margin-bottom: 0.25rem;
+  overflow: hidden;
+  font-size: 0.875rem;
   font-weight: 700;
-  margin-bottom: 0.6rem;
-  padding: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
-.gruppo legend + * { clear: both; }
-/* Ogni gruppo è numerato: 1 cosa fare, 2 che oggetto, 3 che zona */
-.gruppo legend::before {
-  counter-increment: passo;
-  content: counter(passo);
-  display: inline-grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 1.75rem;
-  height: 1.75rem;
-  border-radius: 50%;
-  background: var(--inchiostro);
-  color: var(--carta-chiara);
-  font-family: var(--font-titoli);
+
+/* ---------- Menu a tendina ---------- */
+.menu-filtro select {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  padding: 0.55rem 1.9rem 0.55rem 0.7rem;
+  border: 2px solid var(--tratto);
+  border-radius: var(--raggio);
+  /* Freccia disegnata con due triangoli: prende il colore del testo */
+  background:
+    linear-gradient(45deg, transparent 50%, currentColor 50%) calc(100% - 1.05rem) 52% / 0.35rem 0.35rem no-repeat,
+    linear-gradient(135deg, currentColor 50%, transparent 50%) calc(100% - 0.7rem) 52% / 0.35rem 0.35rem no-repeat,
+    var(--carta);
+  color: var(--inchiostro);
+  font: inherit;
   font-size: 1rem;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+.menu-filtro select:hover { border-color: var(--inchiostro); }
+.menu-filtro select:focus-visible { box-shadow: 4px 4px 0 var(--evidenziatore); }
+
+/* Menu con un filtro scelto (non "Tutti"): passato con l'evidenziatore,
+   in grassetto, così si vede a colpo d'occhio cosa sta filtrando */
+.menu-filtro:has(option[value=""]:not(:checked)) select {
+  background-color: var(--evidenziatore);
+  color: #1d1b17;
+  font-weight: 700;
+}
+/* Le opzioni della lista aperta restano normali */
+.menu-filtro option {
+  background: var(--carta-chiara);
+  color: var(--inchiostro);
+  font-weight: 400;
 }
 
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-/* Il radio vero resta nella pagina (e quindi raggiungibile da tastiera e lettori di schermo),
-   ma è nascosto alla vista: al suo posto si vede l'etichetta a forma di "pillola". */
+/* ---------- Pillole ---------- */
+/* La casella vera resta nella pagina (raggiungibile da tastiera e lettori
+   di schermo) ma è nascosta alla vista: al suo posto si vede la pillola. */
 .chip { position: relative; }
 .chip input {
   position: absolute;
@@ -86,157 +137,29 @@
 /* Il segno di spunta indica la scelta anche a chi non distingue i colori */
 .chip input:checked + span::before { content: "✓"; }
 
-/* Numero di punti che la pillola troverebbe, con gli altri filtri attivi */
-.chip__conteggio {
-  min-width: 1.6em;
-  padding: 0 0.35em;
-  border: 1.5px solid currentColor;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  text-align: center;
-  color: var(--inchiostro)
-}
-/* Pillola che non troverebbe nulla: resta selezionabile, ma il bordo tratteggiato
-   la distingue senza abbassare il contrasto del testo */
-.chip--vuota > span { border-style: dashed; }
-
 .chip input:focus-visible + span {
   outline: 3px solid var(--focus);
   outline-offset: 3px;
 }
 
-/* Fila del conteggio più compatta: numero piccolo dentro la pillola */
-.chip__conteggio { line-height: 1.3; }
-.chip input:checked + span .chip__conteggio { color: inherit; }
-
-/* Comandi in fondo al pannello */
-.filtri__comandi {
-  display: grid;
-  gap: 0.75rem;
-}
-
-/* ---------- Filtri compatti sui telefoni e tablet ----------
-   Sotto i 62rem il pannello non sta di fianco all'elenco ma sopra:
-   restano visibili solo la ricerca e il bottone "Filtri".
-   La classe filtri--chiusi è aggiunta da filtri-telefono.js, quindi senza
-   JavaScript il pannello resta sempre aperto. */
-.apri-filtri {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  flex-shrink: 0;
+/* "Preferiti" accanto alla ricerca: stessa altezza del campo, con un cuore
+   che si riempie quando è attivo (come il bottone "Preferito" delle schede) */
+.chip--preferiti > span {
   min-height: 48px;
-  padding: 0.4rem 0.9rem;
-  border: 2px solid var(--tratto);
   border-radius: var(--raggio);
-  background: var(--carta-chiara);
-  color: var(--inchiostro);
-  font: inherit;
-  font-size: 1rem;
   font-weight: 700;
-  cursor: pointer;
 }
-.apri-filtri:hover { background: var(--carta-scura); }
-.apri-filtri[hidden] { display: none; }
-/* Tre linee di lunghezza diversa, come un'icona "filtro" */
-.apri-filtri__icona {
-  width: 1.1rem;
-  height: 0.8rem;
-  background:
-    linear-gradient(currentColor 0 0) 0 0 / 100% 2px,
-    linear-gradient(currentColor 0 0) center / 70% 2px,
-    linear-gradient(currentColor 0 0) center bottom / 40% 2px;
-  background-repeat: no-repeat;
+.chip__cuore::before {
+  content: "♡";
+  color: var(--dona-testo);
+  font-size: 1.3rem;
+  line-height: 1;
 }
-.apri-filtri[aria-expanded="true"] {
-  background: var(--inchiostro);
-  color: var(--carta-chiara);
+.chip--preferiti:hover > span { background: var(--carta-scura); color: var(--inchiostro); }
+.chip--preferiti input:checked + span {
+  background: var(--dona-sfondo);
+  color: var(--dona-testo);
+  box-shadow: 2px 2px 0 var(--ombra-colore);
 }
-.apri-filtri__numero {
-  min-width: 1.5em;
-  padding: 0 0.35em;
-  border-radius: 999px;
-  background: var(--evidenziatore);
-  color: #1d1b17;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  text-align: center;
-}
-
-/* Pillole dei filtri attivi: un tocco e il filtro torna a "Tutti" */
-.filtri-attivi {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-top: 0.75rem;
-}
-.filtri-attivi[hidden] { display: none; }
-.filtro-attivo {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  min-height: 36px;
-  padding: 0.2rem 0.75rem;
-  border: 2px solid var(--tratto);
-  border-radius: 999px;
-  background: var(--evidenziatore);
-  color: #1d1b17;
-  font: inherit;
-  font-size: 0.9375rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-.filtro-attivo:hover { background: var(--carta-chiara); color: var(--inchiostro); }
-
-@media (max-width: 61.99rem) {
-  .filtri { padding: 1rem; box-shadow: 3px 3px 0 var(--ombra-colore); }
-  .filtri__titolo { font-size: 1.3rem; margin-bottom: 0.4rem; }
-  .cerca { margin-bottom: 0; }
-  .cerca label { font-size: 1rem; }
-
-  .filtri__pannello { margin-top: 1.25rem; }
-  .filtri--chiusi .filtri__pannello { display: none; }
-
-  /* Pannello aperto: ogni gruppo è una sola riga che scorre di lato,
-     così i tre gruppi occupano poco spazio anche aperti.
-     Il margine negativo fa arrivare la riga fino al bordo del pannello,
-     il padding lascia spazio all'anello di focus e all'ombra. */
-  .gruppo { margin-bottom: 0.75rem; padding-top: 0.75rem; }
-  .gruppo .chips {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    margin-inline: -1rem;
-    padding: 0.4rem 1rem 0.6rem;
-    scroll-padding-inline: 1rem;
-    scrollbar-width: thin;
-    scrollbar-color: var(--bordo) transparent;
-    /* Sfumatura ai bordi: si capisce che ci sono altre pillole */
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 1rem, #000 calc(100% - 1.5rem), transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 1rem, #000 calc(100% - 1.5rem), transparent);
-  }
-  .gruppo .chip { flex-shrink: 0; }
-  .gruppo .chip > span { white-space: nowrap; }
-  .gruppo legend { margin-bottom: 0.2rem; }
-
-  /* "Mostra N punti" resta in vista in fondo allo schermo mentre si scorre il pannello */
-  .filtri__comandi {
-    grid-template-columns: auto 1fr;
-    position: sticky;
-    bottom: 0;
-    margin-inline: -1rem;
-    margin-bottom: -1rem;
-    padding: 0.75rem 1rem;
-    border-top: 2px solid var(--tratto);
-    border-radius: 0 0 var(--raggio) var(--raggio);
-    background: var(--carta-chiara);
-  }
-  .filtri__comandi .bottone { width: auto; min-width: 0; padding-inline: 0.85rem; font-size: 1rem; white-space: nowrap; }
-  .mostra-punti[hidden] { display: none; }
-  .filtri__comandi:has(.mostra-punti[hidden]) { grid-template-columns: 1fr; }
-}
-
-/* Schermi larghi: il pannello è sempre aperto di fianco all'elenco */
-@media (min-width: 62rem) {
-  .apri-filtri, .filtri-attivi, .mostra-punti { display: none !important; }
-}
+.chip--preferiti input:checked + span::before { content: none; }
+.chip--preferiti input:checked + span .chip__cuore::before { content: "♥"; }

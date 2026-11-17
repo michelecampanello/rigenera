@@ -1,23 +1,17 @@
 /* ---------- 5. Layout della guida ---------- */
+/* Barra dei filtri in alto, elenco dei punti sotto a tutta larghezza */
 .guida {
   display: grid;
-  gap: 2rem;
+  gap: 1.75rem;
   padding-bottom: 4rem;
 }
-/* Gli elementi della griglia non si allargano oltre la colonna
-   (le righe di pillole che scorrono di lato restano dentro lo schermo) */
 .guida > * { min-width: 0; }
 
+/* Su schermi grandi la barra (una riga sola) resta in vista mentre si scorre l'elenco */
 @media (min-width: 62rem) {
-  .guida {
-    grid-template-columns: 19.5rem 1fr;
-    align-items: start;
-  }
-  /* Su schermi grandi i filtri restano visibili mentre si scorre l'elenco */
   .filtri {
     position: sticky;
-    top: 1rem;
-    max-height: calc(100vh - 2rem);
-    overflow-y: auto;
+    top: 0.75rem;
+    z-index: 5;
   }
 }

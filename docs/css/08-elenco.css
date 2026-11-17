@@ -210,7 +210,7 @@
 }
 .esito p:last-child { margin-bottom: 0; }
 
-/* Filtri: le pillole e la logica sono in filtri.js. Le schede che non
+/* Filtri: i menu e la logica sono in filtri.js. Le schede che non
    corrispondono ricevono l'attributo hidden. Per aggiungere una nuova
    categoria o zona basta una voce in NOMI_CATEGORIE o NOMI_ZONE:
    il CSS non va toccato. */
@@ -236,6 +236,26 @@
   font-weight: 700;
 }
 .risultati__conteggio[hidden] { display: none; }
+.risultati__testa h2 { flex: 1; }
+
+/* "Azzera i filtri": compare accanto al conteggio solo quando serve */
+.azzera {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 44px;
+  padding: 0.25rem 0.9rem;
+  border: 2px solid var(--tratto);
+  border-radius: 999px;
+  background: var(--carta-chiara);
+  color: var(--inchiostro);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.azzera:hover { background: var(--evidenziatore); color: #1d1b17; }
+.azzera[hidden] { display: none; }
 
 @media (max-width: 47.99rem) {
   .guida { gap: 1.5rem; }

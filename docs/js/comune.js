@@ -15,7 +15,7 @@
 const CHIAVE_SEGNALAZIONI = "rigenera-segnalazioni";
 
 // I tre gruppi di filtri, nell'ordine in cui la persona si pone le domande.
-// "campo" è la proprietà del punto da controllare, "tutti" il testo della pillola che azzera il gruppo.
+// "campo" è la proprietà del punto da controllare, "tutti" il testo della prima opzione del menu, che azzera il gruppo.
 // "etichette" permette di usare nei filtri e nel modulo un testo diverso da quello delle schede,
 // "etichetteModulo" un testo diverso solo nel modulo di segnalazione.
 const GRUPPI_FILTRI = [
@@ -26,7 +26,7 @@ const GRUPPI_FILTRI = [
       etichetteModulo: { "non-so": "Non lo so" } }
 ];
 
-// Valore della pillola "Tutto/Tutti/Tutte"
+// Valore dell'opzione "Tutto/Tutti/Tutte"
 const TUTTI = "";
 
 // ---------- localStorage ----------

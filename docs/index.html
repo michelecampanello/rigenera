@@ -49,7 +49,6 @@
   <script src="js/preferiti.js" defer></script>
   <script src="js/schede.js" defer></script>
   <script src="js/dettaglio.js" defer></script>
-  <script src="js/filtri-telefono.js" defer></script>
   <script src="js/filtri.js" defer></script>
   <script src="js/avvio.js" defer></script>
 </head>
@@ -100,53 +99,36 @@
 
     <div class="contenitore guida">
 
-      <form class="filtri" aria-labelledby="titolo-filtri">
-        <h2 id="titolo-filtri" class="filtri__titolo">Cosa ti serve?</h2>
+      <!-- Barra dei filtri: ricerca, preferiti e tre menu (le opzioni le crea filtri.js) -->
+      <form class="filtri" id="filtri" aria-labelledby="titolo-filtri">
+        <h2 id="titolo-filtri" class="solo-lettori">Cerca e filtra i punti</h2>
 
-        <div class="cerca">
-          <label for="cerca-testo">Cerca per nome o parola</label>
-          <div class="cerca__riga">
+        <div class="filtri__riga filtri__riga--cerca">
+          <div class="cerca">
+            <label for="cerca-testo">Cerca per nome o parola</label>
             <input type="search" id="cerca-testo" name="testo" autocomplete="off" placeholder="bici, vestiti, Via Roma…" aria-describedby="aiuto-cerca">
-            <!-- Sui telefoni apre e chiude il pannello dei filtri (gestito da filtri-telefono.js) -->
-            <button type="button" class="apri-filtri" aria-expanded="true" aria-controls="pannello-filtri" hidden>
-              <span class="apri-filtri__icona" aria-hidden="true"></span>
-              Filtri
-              <span class="apri-filtri__numero" hidden></span>
-            </button>
+            <p class="solo-lettori" id="aiuto-cerca">Esempio: bici, vestiti, Via Roma.</p>
           </div>
-          <p class="solo-lettori" id="aiuto-cerca">Esempio: bici, vestiti, Via Roma.</p>
+
+          <!-- Casella vera, nascosta alla vista: si vede la pillola con il cuore -->
+          <label class="chip chip--preferiti">
+            <input type="checkbox" name="solo-preferiti">
+            <span><span class="chip__cuore" aria-hidden="true"></span>Preferiti<span class="solo-lettori"> (mostra solo i miei preferiti)</span></span>
+          </label>
         </div>
 
-        <!-- Filtri attivi, ognuno si toglie con un tocco (solo sui telefoni, gestito da filtri-telefono.js) -->
-        <div class="filtri-attivi" aria-label="Filtri attivi" role="group" hidden></div>
-
-        <div class="filtri__pannello" id="pannello-filtri">
-          <fieldset class="gruppo">
-            <legend>Cosa vuoi fare</legend>
-            <div class="chips" data-gruppo="azione"></div>
-          </fieldset>
-
-          <fieldset class="gruppo">
-            <legend>Che oggetto hai</legend>
-            <div class="chips" data-gruppo="categoria"></div>
-          </fieldset>
-
-          <fieldset class="gruppo">
-            <legend>In che zona</legend>
-            <div class="chips" data-gruppo="zona"></div>
-          </fieldset>
-
-          <div class="gruppo gruppo--preferiti">
-            <label class="chip">
-              <input type="checkbox" name="solo-preferiti">
-              <span>Solo i miei preferiti</span>
-            </label>
+        <div class="filtri__riga filtri__riga--menu">
+          <div class="menu-filtro">
+            <label for="filtro-azione">Cosa vuoi fare</label>
+            <select id="filtro-azione" name="azione" data-gruppo="azione"></select>
           </div>
-
-          <div class="filtri__comandi">
-            <button type="reset" class="bottone bottone--secondario">Azzera i filtri</button>
-            <!-- Solo sui telefoni: chiude il pannello e porta all'elenco -->
-            <button type="button" class="bottone mostra-punti" hidden>Mostra i punti</button>
+          <div class="menu-filtro">
+            <label for="filtro-categoria">Che oggetto</label>
+            <select id="filtro-categoria" name="categoria" data-gruppo="categoria"></select>
+          </div>
+          <div class="menu-filtro">
+            <label for="filtro-zona">In che zona</label>
+            <select id="filtro-zona" name="zona" data-gruppo="zona"></select>
           </div>
         </div>
       </form>
@@ -155,6 +137,10 @@
         <div class="risultati__testa">
           <h2 id="titolo-risultati">Punti della guida</h2>
           <p class="risultati__conteggio" id="conteggio-risultati" hidden></p>
+          <!-- Fuori dal form ma collegato con form="filtri": compare solo se c'è qualcosa da azzerare -->
+          <button type="reset" form="filtri" class="azzera" hidden>
+            <span aria-hidden="true">✕</span> Azzera i filtri
+          </button>
         </div>
 
         <noscript>
