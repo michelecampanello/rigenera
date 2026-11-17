@@ -1,0 +1,17 @@
+.errore-campo {
+    margin: 0.35rem 0 0;
+    font-weight: 700;
+    color: #b3261e;
+}
+.errore-campo::before {
+    content: "⚠ ";
+}
+[aria-invalid="true"] {
+    border-color: #b3261e;
+}
+:root[data-tema="scuro"] .errore-campo {
+    color: #ff9b94;
+}
+:root[data-tema="scuro"] [aria-invalid="true"] {
+    border-color: #ff9b94;
+}
