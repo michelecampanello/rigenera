@@ -6,7 +6,11 @@ Una guida per i cittadini che vogliono dare una seconda vita agli oggetti invece
 
 Sito statico in **HTML, CSS e JavaScript "vanilla"**: nessun framework, nessun back end, nessun database.
 
-![La guida al riuso: filtri a sinistra, schede dei punti a destra](docs/img/screenshot-guida.png)
+![La guida al riuso su computer: filtri a sinistra, schede dei punti a destra](docs/img/screenshot-guida.png)
+
+Sul telefono i filtri si raccolgono dietro il bottone **Filtri**: restano in vista solo la ricerca e i filtri attivi, che si tolgono con un tocco.
+
+<img src="docs/img/screenshot-telefono.png" alt="La guida al riuso sul telefono: ricerca, bottone Filtri con un filtro attivo e numero di punti trovati" width="300">
 
 ```
 docs/index.html            → la guida: ricerca, filtri ed elenco dei punti
@@ -17,7 +21,7 @@ docs/js/script.js          → genera le schede, filtri e ricerca, salva le segn
 docs/js/preferiti.js       → salva e rilegge i punti preferiti (localStorage)
 docs/js/tema.js            → tema chiaro/scuro, con la scelta salvata nel browser
 docs/js/validazione.js     → controlli del modulo di segnalazione, con l'errore sotto ogni campo
-docs/img/                  → favicon, anteprima per i social, screenshot
+docs/img/                  → favicon, anteprima per i social, screenshot (computer e telefono)
 ```
 
 ---
