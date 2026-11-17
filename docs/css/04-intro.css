@@ -26,7 +26,7 @@
   display: inline-block;
   margin-bottom: 1rem;
   padding: 0.2rem 0.75rem;
-  border: 2px solid var(--inchiostro);
+  border: 2px solid var(--tratto);
   border-radius: 999px;
   background: var(--carta-chiara);
   font-size: 0.9375rem;
@@ -45,12 +45,12 @@
 }
 .sigillo__fondo {
   fill: var(--verde-scuro);
-  stroke: var(--inchiostro);
+  stroke: var(--tratto);
   stroke-width: 3;
 }
 .sigillo__linea {
   fill: var(--evidenziatore);
-  stroke: var(--inchiostro);
+  stroke: var(--tratto);
   stroke-width: 3;
 }
 .sigillo__testo {

@@ -3,7 +3,7 @@
 .filtri {
   counter-reset: passo;
   background: var(--carta-chiara);
-  border: 2px solid var(--inchiostro);
+  border: 2px solid var(--tratto);
   border-radius: var(--raggio);
   padding: 1.25rem;
   box-shadow: var(--ombra);
@@ -66,7 +66,7 @@
   gap: 0.35rem;
   min-height: 44px;            /* area di tocco minima consigliata */
   padding: 0.5rem 0.9rem;
-  border: 2px solid var(--inchiostro);
+  border: 2px solid var(--tratto);
   border-radius: 999px;
   background: var(--carta-chiara);
   font-size: 1rem;
@@ -80,7 +80,7 @@
   background: var(--inchiostro);
   color: var(--carta-chiara);
   font-weight: 700;
-  box-shadow: 2px 2px 0 var(--evidenziatore), 3px 3px 0 1px var(--inchiostro);
+  box-shadow: 2px 2px 0 var(--evidenziatore), 3px 3px 0 1px var(--ombra-colore);
   transform: translate(-1px, -1px);
 }
 /* Il segno di spunta indica la scelta anche a chi non distingue i colori */
@@ -128,7 +128,7 @@
   flex-shrink: 0;
   min-height: 48px;
   padding: 0.4rem 0.9rem;
-  border: 2px solid var(--inchiostro);
+  border: 2px solid var(--tratto);
   border-radius: var(--raggio);
   background: var(--carta-chiara);
   color: var(--inchiostro);
@@ -178,7 +178,7 @@
   gap: 0.4rem;
   min-height: 36px;
   padding: 0.2rem 0.75rem;
-  border: 2px solid var(--inchiostro);
+  border: 2px solid var(--tratto);
   border-radius: 999px;
   background: var(--evidenziatore);
   color: #1d1b17;
@@ -190,7 +190,7 @@
 .filtro-attivo:hover { background: var(--carta-chiara); color: var(--inchiostro); }
 
 @media (max-width: 61.99rem) {
-  .filtri { padding: 1rem; box-shadow: 3px 3px 0 var(--inchiostro); }
+  .filtri { padding: 1rem; box-shadow: 3px 3px 0 var(--ombra-colore); }
   .filtri__titolo { font-size: 1.3rem; margin-bottom: 0.4rem; }
   .cerca { margin-bottom: 0; }
   .cerca label { font-size: 1rem; }
@@ -227,7 +227,7 @@
     margin-inline: -1rem;
     margin-bottom: -1rem;
     padding: 0.75rem 1rem;
-    border-top: 2px solid var(--inchiostro);
+    border-top: 2px solid var(--tratto);
     border-radius: 0 0 var(--raggio) var(--raggio);
     background: var(--carta-chiara);
   }

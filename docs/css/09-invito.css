@@ -29,7 +29,7 @@
   background: var(--evidenziatore);
   color: var(--inchiostro);
   border-color: var(--inchiostro);
-  box-shadow: 4px 4px 0 var(--inchiostro);
+  box-shadow: 4px 4px 0 var(--ombra-colore);
 }
 .invito .bottone:hover { background: #fff; }
 .invito a:not(.bottone) { color: #fff; }

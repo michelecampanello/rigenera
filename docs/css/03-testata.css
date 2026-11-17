@@ -1,7 +1,7 @@
 /* ---------- 3. Testata e navigazione ---------- */
 .testata {
   background: var(--carta-chiara);
-  border-bottom: 2px solid var(--inchiostro);
+  border-bottom: 2px solid var(--tratto);
 }
 .testata__riga {
   display: flex;
@@ -28,13 +28,13 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
-  border: 2px solid var(--inchiostro);
+  border: 2px solid var(--tratto);
   background: var(--evidenziatore);
   color: var(--inchiostro);
   font-family: var(--font-testo);
   font-size: 1.35rem;
   font-weight: 700;
-  box-shadow: 2px 2px 0 var(--inchiostro);
+  box-shadow: 2px 2px 0 var(--ombra-colore);
   transition: transform 0.4s ease;
 }
 .logo:hover .logo__segno { transform: rotate(-180deg); }
@@ -63,7 +63,7 @@
 .menu a[aria-current="page"] {
   background: var(--evidenziatore);
   border-color: var(--inchiostro);
-  box-shadow: 2px 2px 0 var(--inchiostro);
+  box-shadow: 2px 2px 0 var(--ombra-colore);
 }
 
 /* Telefoni: logo e tema sulla prima riga, menu sotto a tutta larghezza.
@@ -77,6 +77,9 @@
     position: absolute; width: 1px; height: 1px; margin: -1px;
     overflow: hidden; clip-path: inset(50%); white-space: nowrap;
   }
+  /* Senza testo, la spunta da sola non si capirebbe: col tema scuro attivo
+     si vede il sole, cioè "torna al tema chiaro" */
+  .testata .tema[aria-pressed="true"] .tema__icona::before { content: "\2600\FE0E"; }
   .testata nav { order: 3; width: 100%; }
   .menu { flex-wrap: nowrap; gap: 0.5rem; }
   .menu li { flex: 1; }

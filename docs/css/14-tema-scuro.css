@@ -13,7 +13,7 @@
   gap: 0.4rem;
   min-height: 44px;
   padding: 0.4rem 0.9rem;
-  border: 2px solid var(--inchiostro);
+  border: 2px solid var(--tratto);
   border-radius: 999px;
   background: transparent;
   color: var(--inchiostro);
@@ -48,6 +48,11 @@
     --verde-chiaro: #1f3a2a;
     --verde-testo: #9fd8b1;       /* titoli e link: 10.8:1 su --carta */
     --bordo: #9a8f7b;             /* 4.9:1, sufficiente per i controlli */
+    /* Bordi meno accesi del testo (5.9:1 sulle schede, i controlli chiedono 3:1)
+       e ombre "a timbro" scure: col gesso al posto dell'inchiostro le schede
+       sembravano ritagliate da una luce al neon */
+    --tratto: #a89d88;
+    --ombra-colore: #0b0a08;
     --focus: #ff9a4d;
     --errore: #ff9b94;
 
@@ -89,7 +94,21 @@
   :where([data-tema="scuro"]) .modulo select,
   :where([data-tema="scuro"]) .modulo textarea { background: var(--carta); }
 
+  /* Barra di scorrimento del pannello filtri: senza colore resterebbe bianca */
+  :where([data-tema="scuro"]) .filtri { scrollbar-color: var(--bordo) var(--carta-chiara); }
+
+  /* Caselle del modulo: il verde della Fondazione è troppo scuro sul fondo scuro */
+  :where([data-tema="scuro"]) .scelta input { accent-color: var(--verde-testo); }
+
+  /* Bottone del tema attivo: niente pillola color gesso nella testata,
+     basta il fondo più chiaro e il segno di spunta */
+  :where([data-tema="scuro"]) .tema[aria-pressed="true"] {
+    background: var(--carta-scura);
+    color: var(--inchiostro);
+  }
+
   :where([data-tema="scuro"]) .modulo :user-invalid,
+  :where([data-tema="scuro"]) .modulo [aria-invalid="true"],
   :where([data-tema="scuro"]) .messaggio--errore { background: #3a1416; }
 
   /* Piè di pagina: nel tema chiaro è scuro, qui resta scuro (non diventa chiaro) */

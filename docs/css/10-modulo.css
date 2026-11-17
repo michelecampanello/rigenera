@@ -5,7 +5,7 @@
 .modulo fieldset {
   margin: 2.25rem 0 1.75rem;
   padding: 1.5rem 1.25rem 1.25rem;
-  border: 2px solid var(--inchiostro);
+  border: 2px solid var(--tratto);
   border-radius: var(--raggio);
   background: var(--carta-chiara);
   box-shadow: var(--ombra);
@@ -13,7 +13,7 @@
 }
 .modulo > fieldset > legend {
   padding: 0.3rem 0.9rem;
-  border: 2px solid var(--inchiostro);
+  border: 2px solid var(--tratto);
   border-radius: 999px;
   background: var(--inchiostro);
   color: var(--carta-chiara);
@@ -44,7 +44,7 @@
   width: 100%;
   min-height: 48px;
   padding: 0.65rem 0.8rem;
-  border: 2px solid var(--inchiostro);
+  border: 2px solid var(--tratto);
   border-radius: var(--raggio);
   background: #fff;
   color: var(--inchiostro);
@@ -98,7 +98,7 @@
 .messaggio {
   margin-top: 1.5rem;
   padding: 1rem 1.25rem;
-  border: 2px solid var(--inchiostro);
+  border: 2px solid var(--tratto);
   border-radius: var(--raggio);
   background: var(--verde-chiaro);
   box-shadow: var(--ombra);

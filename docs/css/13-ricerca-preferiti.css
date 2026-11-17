@@ -12,7 +12,7 @@
   width: 100%;
   min-height: 48px;
   padding: 0.65rem 0.8rem;
-  border: 2px solid var(--inchiostro);
+  border: 2px solid var(--tratto);
   border-radius: var(--raggio);
   background: var(--carta);
   color: var(--inchiostro);
@@ -35,7 +35,7 @@
   gap: 0.4rem;
   min-height: 44px;             /* area di tocco comoda */
   padding: 0.4rem 0.9rem;
-  border: 2px solid var(--inchiostro);
+  border: 2px solid var(--tratto);
   border-radius: 999px;
   background: var(--carta-chiara);
   color: var(--inchiostro);
@@ -54,14 +54,14 @@
 .preferito[aria-pressed="true"] {
   background: var(--dona-sfondo);
   color: var(--dona-testo);
-  box-shadow: 2px 2px 0 var(--inchiostro);
+  box-shadow: 2px 2px 0 var(--ombra-colore);
 }
 
 /* Messaggio quando ricerca e filtri non trovano nulla */
 .vuoto {
   margin: 0 0 1.5rem;
   padding: 1rem 1.25rem;
-  border: 2px dashed var(--inchiostro);
+  border: 2px dashed var(--tratto);
   border-radius: var(--raggio);
   background: var(--carta-chiara);
   font-weight: 700;
