@@ -1,17 +1,15 @@
+/* ---------- 15. Validazione del modulo ---------- */
+/* Usa var(--errore): il colore cambia da solo anche nel tema scuro */
 .errore-campo {
     margin: 0.35rem 0 0;
     font-weight: 700;
-    color: #b3261e;
+    color: var(--errore);
 }
 .errore-campo::before {
     content: "⚠ ";
 }
-[aria-invalid="true"] {
-    border-color: #b3261e;
-}
-:root[data-tema="scuro"] .errore-campo {
-    color: #ff9b94;
-}
-:root[data-tema="scuro"] [aria-invalid="true"] {
-    border-color: #ff9b94;
+/* Stessa specificità delle regole di 10-modulo.css (es. .modulo input[type="text"]):
+   questo file viene dopo, quindi il bordo rosso vince */
+.modulo :is(input, select, textarea)[aria-invalid="true"] {
+    border-color: var(--errore);
 }
