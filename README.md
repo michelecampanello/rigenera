@@ -6,11 +6,11 @@ Una guida per i cittadini che vogliono dare una seconda vita agli oggetti invece
 
 Sito statico in **HTML, CSS e JavaScript "vanilla"**: nessun framework, nessun back end, nessun database.
 
-![La guida al riuso su computer: barra dei filtri in alto, schede dei punti sotto](docs/img/screenshot-guida.png)
+![La guida al riuso su computer: barra dei filtri in alto con il menu "Che oggetto" aperto, schede dei punti sotto](docs/img/screenshot-guida.png)
 
-Sul telefono la barra dei filtri occupa poche righe: ricerca a tutta larghezza, poi i tre menu a tendina e il filtro dei preferiti in fondo a destra.
+Sul telefono la barra dei filtri occupa poche righe: ricerca a tutta larghezza, poi i tre menu a tendina e il filtro dei preferiti in fondo a destra. Ogni menu apre un elenco di voci con il numero di punti che troverebbe.
 
-<img src="docs/img/screenshot-telefono.png" alt="La guida al riuso sul telefono: ricerca, bottone Filtri con un filtro attivo e numero di punti trovati" width="300">
+<img src="docs/img/screenshot-telefono.png" alt="La guida al riuso sul telefono: barra dei filtri con Riparare scelto e il menu Che oggetto aperto sull'elenco delle voci" width="300">
 
 ```
 docs/index.html            → la guida: ricerca, filtri ed elenco dei punti
