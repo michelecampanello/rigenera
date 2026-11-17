@@ -289,7 +289,7 @@ function normalizzaTesto(testo) {
     return testo
         .toLowerCase()
         .normalize("NFD")
-        .replace(/[̀-ͯ]/g, "");
+        .replace(/[\u0300-\u036f]/g, "");
 }
 
 // Ricerca libera su nome, descrizione e indirizzo.
@@ -463,7 +463,7 @@ function gestisciFiltri(filtri, elenco, annuncio, punti, nessunRisultato) {
 function creaId(nome) {
     const base = nome
         .toLowerCase()
-        .normalize("NFD").replace(/[̀-ͯ]/g, "") // toglie gli accenti
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // toglie gli accenti
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-|-$/g, "");
     return base + "-" + Date.now();
@@ -513,11 +513,10 @@ function gestisciModulo(modulo) {
         const azioni = dati.getAll("azione");
         const categorie = dati.getAll("categoria");
 
-        // Senza almeno un'azione il punto non comparirebbe in nessun filtro
-        if (azioni.length === 0) {
-            messaggio.textContent = "Scegli almeno una cosa che si può fare in questo punto.";
-            messaggio.className = "messaggio messaggio--errore";
-            modulo.querySelector('input[name="azione"]').focus();
+        // Controlla tutti i campi: se c'è un errore lo mostra sotto il campo e si ferma
+        if (!validaModulo(modulo)) {
+            messaggio.textContent = "";
+            messaggio.className = "messaggio";
             return;
         }
 

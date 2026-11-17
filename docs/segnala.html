@@ -27,8 +27,10 @@
   <link rel="stylesheet" href="css/11-piede.css">
   <link rel="stylesheet" href="css/12-accessibilita.css">
   <link rel="stylesheet" href="css/14-tema-scuro.css">
+  <link rel="stylesheet" href="css/15-validazione.css">
   <!-- tema.js senza defer: applica il tema prima che la pagina venga disegnata -->
   <script src="js/tema.js"></script>
+  <script src="js/validazione.js" defer></script>
   <script src="js/script.js" defer></script>
 </head>
 <body>
@@ -67,7 +69,7 @@
       <p class="messaggio messaggio--errore">Per inviare una segnalazione è necessario attivare JavaScript nel browser.</p>
     </noscript>
 
-    <form class="modulo" id="modulo-segnala" method="post">
+    <form class="modulo" id="modulo-segnala" method="post" novalidate>
 
       <fieldset>
         <legend>Il punto</legend>
