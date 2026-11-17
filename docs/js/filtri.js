@@ -1,9 +1,10 @@
 // ==========================================================================
 // Filtri, ricerca e conteggi (index.html)
-// Le opzioni dei tre menu nascono da GRUPPI_FILTRI di comune.js. Ogni
-// cambio di filtro nasconde le schede che non corrispondono, aggiorna i
-// conteggi nelle opzioni e annuncia il numero di punti ai lettori di schermo.
-// Usa: comune.js, preferiti.js (leggiPreferiti).
+// Le pillole dei tre menu a tendina nascono da GRUPPI_FILTRI di comune.js.
+// Ogni cambio di filtro nasconde le schede che non corrispondono, aggiorna
+// i conteggi e il testo dei menu e annuncia il numero di punti ai lettori
+// di schermo. Apertura e chiusura delle tendine sono in tendine.js.
+// Usa: comune.js, preferiti.js (leggiPreferiti), tendine.js.
 // ==========================================================================
 
 
@@ -48,32 +49,39 @@ function superaFiltri(punto, scelte, gruppoDaIgnorare) {
         );
 }
 
-// Riempie i tre menu a tendina. La prima opzione ("Tutto", "Tutti", "Tutte")
-// è quella iniziale, quindi "Azzera i filtri" (un reset del form) torna lì.
-// Il testo senza numero resta in data-testo: il conteggio viene aggiunto dopo.
+// Ogni opzione è una pillola: un radio vero (raggiungibile da tastiera e
+// lettori di schermo, frecce per cambiare scelta) nascosto sotto l'etichetta.
+// Il testo senza numero resta in data-testo, per il bottone del menu.
+function creaPillola(gruppo, valore, testo) {
+    const selezionata = valore === TUTTI ? " checked" : "";
+    return `
+        <label class="chip">
+            <input type="radio" name="${gruppo.nome}" value="${valore}" data-testo="${escapeHtml(testo)}"${selezionata}>
+            <span>${escapeHtml(testo)} <span class="chip__conteggio"></span></span>
+        </label>
+    `;
+}
+
+// Riempie le tre tendine. La prima pillola ("Tutto", "Tutti", "Tutte") è
+// quella iniziale, quindi "Azzera i filtri" (un reset del form) torna lì.
 function creaMenu(filtri) {
     GRUPPI_FILTRI.forEach(gruppo => {
-        const menu = filtri.querySelector(`select[data-gruppo="${gruppo.nome}"]`);
-        if (!menu) {
+        const contenitore = filtri.querySelector(`.chips[data-gruppo="${gruppo.nome}"]`);
+        if (!contenitore) {
             return;
         }
         const etichette = gruppo.etichette || {};
-        const voci = [[TUTTI, gruppo.tutti]].concat(
-            Object.entries(gruppo.voci).map(([valore, nome]) => [valore, etichette[valore] || nome])
-        );
-        voci.forEach(([valore, testo]) => {
-            const opzione = new Option(testo, valore, valore === TUTTI, valore === TUTTI);
-            opzione.dataset.testo = testo;
-            menu.add(opzione);
-        });
+        const pillole = Object.entries(gruppo.voci)
+            .map(([valore, nome]) => creaPillola(gruppo, valore, etichette[valore] || nome));
+        contenitore.innerHTML = creaPillola(gruppo, TUTTI, gruppo.tutti) + pillole.join("");
     });
 }
 
 function leggiScelte(filtri) {
     const scelte = {};
     GRUPPI_FILTRI.forEach(gruppo => {
-        const menu = filtri.querySelector(`select[name="${gruppo.nome}"]`);
-        scelte[gruppo.nome] = menu ? menu.value : TUTTI;
+        const scelta = filtri.querySelector(`input[name="${gruppo.nome}"]:checked`);
+        scelte[gruppo.nome] = scelta ? scelta.value : TUTTI;
     });
 
     const campoRicerca = filtri.querySelector('input[name="testo"]');
@@ -105,19 +113,28 @@ function applicaFiltri(filtri, elenco, punti) {
     return visibili;
 }
 
-// In ogni opzione: quanti punti si troverebbero scegliendola,
-// tenendo fermi gli altri filtri. Es. "Riparare (5)".
+// Accanto a ogni pillola: quanti punti si troverebbero scegliendola,
+// tenendo fermi gli altri filtri. Il bottone del menu mostra la scelta
+// attuale con il suo numero, es. "Riparare (5)", ed è evidenziato se
+// il gruppo non è su "Tutti".
 function aggiornaConteggiMenu(filtri, punti, scelte) {
     GRUPPI_FILTRI.forEach(gruppo => {
-        const menu = filtri.querySelector(`select[name="${gruppo.nome}"]`);
+        const menu = filtri.querySelector(`.menu-filtro[data-gruppo="${gruppo.nome}"]`);
         if (!menu) {
             return;
         }
         const candidati = punti.filter(punto => superaFiltri(punto, scelte, gruppo));
-        Array.from(menu.options).forEach(opzione => {
-            const quanti = candidati.filter(punto => superaGruppo(punto, gruppo, opzione.value)).length;
-            opzione.textContent = `${opzione.dataset.testo} (${quanti})`;
+        menu.querySelectorAll(`input[name="${gruppo.nome}"]`).forEach(input => {
+            const quanti = candidati.filter(punto => superaGruppo(punto, gruppo, input.value)).length;
+            const pillola = input.closest(".chip");
+            pillola.querySelector(".chip__conteggio").innerHTML =
+                `${quanti}<span class="solo-lettori"> ${quanti === 1 ? "punto" : "punti"}</span>`;
+            pillola.classList.toggle("chip--vuota", quanti === 0);
+            if (input.checked) {
+                menu.querySelector(".menu-filtro__valore").textContent = `${input.dataset.testo} (${quanti})`;
+            }
         });
+        menu.classList.toggle("menu-filtro--attivo", scelte[gruppo.nome] !== TUTTI);
     });
 }
 
@@ -170,6 +187,7 @@ function testoPunti(quanti) {
 // Restituisce la funzione che riapplica i filtri, usata anche dai preferiti
 function gestisciFiltri(filtri, elenco, annuncio, punti, nessunRisultato) {
     creaMenu(filtri);
+    gestisciTendine(filtri);
 
     const conteggio = document.getElementById("conteggio-risultati");
     // Il bottone sta vicino al conteggio, fuori dal form (collegato con form="filtri")

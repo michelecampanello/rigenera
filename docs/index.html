@@ -49,6 +49,7 @@
   <script src="js/preferiti.js" defer></script>
   <script src="js/schede.js" defer></script>
   <script src="js/dettaglio.js" defer></script>
+  <script src="js/tendine.js" defer></script>
   <script src="js/filtri.js" defer></script>
   <script src="js/avvio.js" defer></script>
 </head>
@@ -99,38 +100,56 @@
 
     <div class="contenitore guida">
 
-      <!-- Barra dei filtri: ricerca, preferiti e tre menu (le opzioni le crea filtri.js) -->
+      <!-- Barra dei filtri: ricerca, tre menu a tendina e preferiti.
+           Ogni menu è un bottone che apre una "tendina" con le pillole (radio veri):
+           le crea filtri.js, le apre e chiude tendine.js -->
       <form class="filtri" id="filtri" aria-labelledby="titolo-filtri">
         <h2 id="titolo-filtri" class="solo-lettori">Cerca e filtra i punti</h2>
 
-        <div class="filtri__riga filtri__riga--cerca">
-          <div class="cerca">
-            <label for="cerca-testo">Cerca per nome o parola</label>
-            <input type="search" id="cerca-testo" name="testo" autocomplete="off" placeholder="bici, vestiti, Via Roma…" aria-describedby="aiuto-cerca">
-            <p class="solo-lettori" id="aiuto-cerca">Esempio: bici, vestiti, Via Roma.</p>
-          </div>
-
-          <!-- Casella vera, nascosta alla vista: si vede la pillola con il cuore -->
-          <label class="chip chip--preferiti">
-            <input type="checkbox" name="solo-preferiti">
-            <span><span class="chip__cuore" aria-hidden="true"></span>Preferiti<span class="solo-lettori"> (mostra solo i miei preferiti)</span></span>
-          </label>
+        <div class="cerca">
+          <label for="cerca-testo">Cerca per nome o parola</label>
+          <input type="search" id="cerca-testo" name="testo" autocomplete="off" placeholder="bici, vestiti, Via Roma…" aria-describedby="aiuto-cerca">
+          <p class="solo-lettori" id="aiuto-cerca">Esempio: bici, vestiti, Via Roma.</p>
         </div>
 
-        <div class="filtri__riga filtri__riga--menu">
-          <div class="menu-filtro">
-            <label for="filtro-azione">Cosa vuoi fare</label>
-            <select id="filtro-azione" name="azione" data-gruppo="azione"></select>
+        <div class="filtri__menu">
+          <div class="menu-filtro" data-gruppo="azione">
+            <span class="menu-filtro__etichetta" id="etichetta-azione">Cosa vuoi fare</span>
+            <button type="button" class="menu-filtro__bottone" aria-expanded="false" aria-controls="tendina-azione" aria-labelledby="etichetta-azione valore-azione">
+              <span class="menu-filtro__valore" id="valore-azione"></span>
+            </button>
+            <fieldset class="tendina" id="tendina-azione" hidden>
+              <legend class="solo-lettori">Cosa vuoi fare</legend>
+              <div class="chips" data-gruppo="azione"></div>
+            </fieldset>
           </div>
-          <div class="menu-filtro">
-            <label for="filtro-categoria">Che oggetto</label>
-            <select id="filtro-categoria" name="categoria" data-gruppo="categoria"></select>
+          <div class="menu-filtro" data-gruppo="categoria">
+            <span class="menu-filtro__etichetta" id="etichetta-categoria">Che oggetto</span>
+            <button type="button" class="menu-filtro__bottone" aria-expanded="false" aria-controls="tendina-categoria" aria-labelledby="etichetta-categoria valore-categoria">
+              <span class="menu-filtro__valore" id="valore-categoria"></span>
+            </button>
+            <fieldset class="tendina" id="tendina-categoria" hidden>
+              <legend class="solo-lettori">Che oggetto</legend>
+              <div class="chips" data-gruppo="categoria"></div>
+            </fieldset>
           </div>
-          <div class="menu-filtro">
-            <label for="filtro-zona">In che zona</label>
-            <select id="filtro-zona" name="zona" data-gruppo="zona"></select>
+          <div class="menu-filtro" data-gruppo="zona">
+            <span class="menu-filtro__etichetta" id="etichetta-zona">In che zona</span>
+            <button type="button" class="menu-filtro__bottone" aria-expanded="false" aria-controls="tendina-zona" aria-labelledby="etichetta-zona valore-zona">
+              <span class="menu-filtro__valore" id="valore-zona"></span>
+            </button>
+            <fieldset class="tendina" id="tendina-zona" hidden>
+              <legend class="solo-lettori">In che zona</legend>
+              <div class="chips" data-gruppo="zona"></div>
+            </fieldset>
           </div>
         </div>
+
+        <!-- Casella vera, nascosta alla vista: si vede la pillola con il cuore -->
+        <label class="chip chip--preferiti">
+          <input type="checkbox" name="solo-preferiti">
+          <span><span class="chip__cuore" aria-hidden="true"></span>Preferiti<span class="solo-lettori"> (mostra solo i miei preferiti)</span></span>
+        </label>
       </form>
 
       <section id="risultati" class="risultati" aria-labelledby="titolo-risultati" tabindex="-1">
