@@ -43,9 +43,15 @@
   <link rel="stylesheet" href="css/16-dettaglio.css">
   <!-- tema.js senza defer: applica il tema prima che la pagina venga disegnata -->
   <script src="js/tema.js"></script>
+  <!-- Script normali con defer: si eseguono in quest'ordine, ognuno usa le funzioni dei precedenti -->
   <script src="js/data.js" defer></script>
+  <script src="js/comune.js" defer></script>
   <script src="js/preferiti.js" defer></script>
-  <script src="js/script.js" defer></script>
+  <script src="js/schede.js" defer></script>
+  <script src="js/dettaglio.js" defer></script>
+  <script src="js/filtri-telefono.js" defer></script>
+  <script src="js/filtri.js" defer></script>
+  <script src="js/avvio.js" defer></script>
 </head>
 <body>
   <a class="salta" href="#risultati">Vai direttamente ai punti</a>
@@ -101,7 +107,7 @@
           <label for="cerca-testo">Cerca per nome o parola</label>
           <div class="cerca__riga">
             <input type="search" id="cerca-testo" name="testo" autocomplete="off" placeholder="bici, vestiti, Via Roma…" aria-describedby="aiuto-cerca">
-            <!-- Sui telefoni apre e chiude il pannello dei filtri (gestito da script.js) -->
+            <!-- Sui telefoni apre e chiude il pannello dei filtri (gestito da filtri-telefono.js) -->
             <button type="button" class="apri-filtri" aria-expanded="true" aria-controls="pannello-filtri" hidden>
               <span class="apri-filtri__icona" aria-hidden="true"></span>
               Filtri
@@ -111,7 +117,7 @@
           <p class="solo-lettori" id="aiuto-cerca">Esempio: bici, vestiti, Via Roma.</p>
         </div>
 
-        <!-- Filtri attivi, ognuno si toglie con un tocco (solo sui telefoni, gestito da script.js) -->
+        <!-- Filtri attivi, ognuno si toglie con un tocco (solo sui telefoni, gestito da filtri-telefono.js) -->
         <div class="filtri-attivi" aria-label="Filtri attivi" role="group" hidden></div>
 
         <div class="filtri__pannello" id="pannello-filtri">
@@ -155,7 +161,7 @@
           <p class="messaggio messaggio--errore">Per vedere l'elenco dei punti è necessario attivare JavaScript nel browser.</p>
         </noscript>
 
-        <!-- Compare solo quando ricerca e filtri non trovano nulla (gestito da script.js) -->
+        <!-- Compare solo quando ricerca e filtri non trovano nulla (gestito da filtri.js) -->
         <p id="nessun-risultato" class="vuoto" hidden></p>
 
         <ol id="elenco-punti" class="elenco" role="list">
@@ -172,7 +178,7 @@
       </section>
     </div>
 
-    <!-- Finestra con tutti i dettagli di un punto: la riempie script.js quando si apre una scheda -->
+    <!-- Finestra con tutti i dettagli di un punto: la riempie dettaglio.js quando si apre una scheda -->
     <dialog id="dettaglio" class="dettaglio" aria-labelledby="dettaglio-titolo"></dialog>
 
     <section class="invito" aria-labelledby="titolo-invito">

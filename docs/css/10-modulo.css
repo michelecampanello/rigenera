@@ -93,7 +93,7 @@
   overflow: hidden;
 }
 
-/* Messaggio dopo l'invio del modulo (scritto da script.js) */
+/* Messaggio dopo l'invio del modulo (scritto da modulo.js) */
 .messaggio:empty { display: none; }
 .messaggio {
   margin-top: 1.5rem;

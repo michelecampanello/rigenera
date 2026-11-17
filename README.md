@@ -17,7 +17,13 @@ docs/index.html            → la guida: ricerca, filtri ed elenco dei punti
 docs/segnala.html          → modulo con cui i cittadini segnalano nuovi punti
 docs/css/01-…16-*.css      → lo stile, diviso per sezione (variabili, base, testata, filtri, elenco, modulo, ricerca e preferiti, tema scuro, validazione, finestra dei dettagli)
 docs/js/data.js            → SOLO DATI: i punti della guida e i nomi di azioni, categorie e zone
-docs/js/script.js          → genera le schede e la finestra dei dettagli, filtri e ricerca, salva le segnalazioni, annuncia i risultati
+docs/js/comune.js          → parti comuni alle due pagine: gruppi di filtri, segnalazioni salvate, sicurezza del testo
+docs/js/schede.js          → trasforma i punti in schede dell'elenco
+docs/js/dettaglio.js       → finestra con tutti i dettagli di un punto
+docs/js/filtri.js          → filtri, ricerca, conteggi e annuncio dei risultati
+docs/js/filtri-telefono.js → pannello dei filtri apribile e filtri attivi sui telefoni
+docs/js/modulo.js          → modulo di segnalazione: caselle, salvataggio, messaggio finale
+docs/js/avvio.js           → si carica per ultimo e avvia ciò che serve alla pagina
 docs/js/preferiti.js       → salva e rilegge i punti preferiti (localStorage)
 docs/js/tema.js            → tema chiaro/scuro, con la scelta salvata nel browser
 docs/js/validazione.js     → controlli del modulo di segnalazione, con l'errore sotto ogni campo
@@ -68,7 +74,7 @@ Ognuno ha lavorato su un proprio branch; le modifiche sono entrate in `main` tra
 
 Tre gruppi di filtri che corrispondono al bisogno reale: **azione → oggetto → zona**. "Dove riparo la bici?" si risolve con due tocchi.
 
-**Filtri dinamici.** Le pillole non sono scritte a mano: `script.js` le genera da `GRUPPI_FILTRI`, che a sua volta usa `NOMI_AZIONI`, `NOMI_CATEGORIE` e `NOMI_ZONE`. Ogni pillola è un vero pulsante radio, quindi la tastiera e i lettori di schermo funzionano come prima: Tab tra i gruppi, frecce dentro il gruppo.
+**Filtri dinamici.** Le pillole non sono scritte a mano: `filtri.js` le genera da `GRUPPI_FILTRI`, che a sua volta usa `NOMI_AZIONI`, `NOMI_CATEGORIE` e `NOMI_ZONE`. Ogni pillola è un vero pulsante radio, quindi la tastiera e i lettori di schermo funzionano come prima: Tab tra i gruppi, frecce dentro il gruppo.
 
 - I tre gruppi si combinano: resta visibile solo ciò che supera tutti i filtri. Le schede escluse ricevono l'attributo `hidden`, quindi spariscono anche per il lettore di schermo.
 - Un punto può avere **più azioni o categorie**.
@@ -80,10 +86,10 @@ Tre gruppi di filtri che corrispondono al bisogno reale: **azione → oggetto �
 
 ### 3. "Aggiornare l'elenco non deve diventare un incubo"
 
-I punti sono dati, non HTML: stanno nell'array `PUNTI_GUIDA` del file **`data.js`**, separato dalla logica. In cima al file è descritta la forma di ogni punto e i valori ammessi. La funzione `creaScheda()` di `script.js` trasforma ogni punto in una scheda con gli attributi `data-azione`, `data-categoria` e `data-zona` (usati dal CSS per il colore del cartellino).
+I punti sono dati, non HTML: stanno nell'array `PUNTI_GUIDA` del file **`data.js`**, separato dalla logica. In cima al file è descritta la forma di ogni punto e i valori ammessi. La funzione `creaScheda()` di `schede.js` trasforma ogni punto in una scheda con gli attributi `data-azione`, `data-categoria` e `data-zona` (usati dal CSS per il colore del cartellino).
 
 1. **Per aggiungere un punto basta aggiungere un oggetto all'array** in `data.js`, con un `id` nuovo.
-2. **Non si tocca né l'HTML né il CSS né `script.js`**: filtri e conteggi si aggiornano da soli.
+2. **Non si tocca né l'HTML né il CSS né il JavaScript**: filtri e conteggi si aggiornano da soli.
 3. Ogni punto ha un **`id` unico e stabile** (es. `"raggi-liberi"`), mai la posizione nell'array: i preferiti sono salvati per `id`, quindi restano giusti anche se l'elenco viene riordinato.
 
 Per aggiungere una **nuova categoria o zona** basta una voce in `NOMI_CATEGORIE` o `NOMI_ZONE` di `data.js`: compaiono da sole sia la pillola nei filtri sia la casella (o l'opzione della zona) nel modulo di `segnala.html`.
@@ -92,7 +98,7 @@ Nel `localStorage` restano solo le **segnalazioni dei cittadini**, non tutto l'e
 
 ### 4. "I cittadini possono segnalarci nuovi punti"
 
-`segnala.html` contiene un modulo con gli stessi campi di una scheda (nome, azioni, categorie, zona, indirizzo, orari, descrizione), più un contatto facoltativo e il consenso privacy. Le caselle di azioni e categorie e le opzioni della zona vengono generate da `script.js` con gli stessi dati dei filtri, quindi guida e modulo non possono andare fuori sincrono.
+`segnala.html` contiene un modulo con gli stessi campi di una scheda (nome, azioni, categorie, zona, indirizzo, orari, descrizione), più un contatto facoltativo e il consenso privacy. Le caselle di azioni e categorie e le opzioni della zona vengono generate da `modulo.js` con gli stessi dati dei filtri, quindi guida e modulo non possono andare fuori sincrono.
 
 - Il punto segnalato viene **salvato nel `localStorage`** (solo le segnalazioni, con la stessa forma dei punti di `data.js`) e compare subito nell'elenco, con il link al sito se è stato indicato (solo indirizzi `http`/`https`).
 - **Validazione in JavaScript** (`validazione.js`): campi obbligatori, almeno un'azione scelta, formato dell'e-mail e del sito. Ogni errore compare **sotto il proprio campo**, il campo riceve `aria-invalid` e `aria-describedby` (così il lettore di schermo legge l'errore) e il cursore va sul primo campo sbagliato. L'errore sparisce appena il campo viene corretto.

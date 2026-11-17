@@ -119,7 +119,7 @@
 /* ---------- Filtri compatti sui telefoni e tablet ----------
    Sotto i 62rem il pannello non sta di fianco all'elenco ma sopra:
    restano visibili solo la ricerca e il bottone "Filtri".
-   La classe filtri--chiusi è aggiunta da script.js, quindi senza
+   La classe filtri--chiusi è aggiunta da filtri-telefono.js, quindi senza
    JavaScript il pannello resta sempre aperto. */
 .apri-filtri {
   display: inline-flex;
