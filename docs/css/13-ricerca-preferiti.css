@@ -23,12 +23,8 @@
 /* "Solo i miei preferiti": usa lo stile delle pillole (casella vera, nascosta alla vista) */
 .gruppo--preferiti { padding-top: 1rem; }
 
-/* Bottone "♡ Preferito" in fondo alla scheda */
-.scheda__azioni {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 1rem;
-}
+/* Bottone "♡ Preferito": nella finestra dei dettagli con il testo,
+   nella scheda dell'elenco solo il cuore (preferito--compatto) */
 .preferito {
   display: inline-flex;
   align-items: center;
@@ -45,6 +41,14 @@
   cursor: pointer;
 }
 .preferito:hover { background: var(--carta-scura); }
+/* Sopra il ::before del nome, che copre tutta la scheda */
+.preferito--compatto {
+  position: relative;
+  z-index: 1;
+  justify-content: center;
+  width: 44px;
+  padding: 0;
+}
 .preferito__icona {
   font-size: 1.3rem;
   line-height: 1;
@@ -73,7 +77,7 @@
 }
 
 @media print {
-  .scheda__azioni, .vuoto { display: none !important; }
+  .scheda__piede, .vuoto { display: none !important; }
 }
 
 /* Ricerca e bottone "Filtri" sulla stessa riga */

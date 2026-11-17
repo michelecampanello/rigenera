@@ -15,9 +15,9 @@ Sul telefono i filtri si raccolgono dietro il bottone **Filtri**: restano in vis
 ```
 docs/index.html            → la guida: ricerca, filtri ed elenco dei punti
 docs/segnala.html          → modulo con cui i cittadini segnalano nuovi punti
-docs/css/01-…15-*.css      → lo stile, diviso per sezione (variabili, base, testata, filtri, elenco, modulo, ricerca e preferiti, tema scuro, validazione)
+docs/css/01-…16-*.css      → lo stile, diviso per sezione (variabili, base, testata, filtri, elenco, modulo, ricerca e preferiti, tema scuro, validazione, finestra dei dettagli)
 docs/js/data.js            → SOLO DATI: i punti della guida e i nomi di azioni, categorie e zone
-docs/js/script.js          → genera le schede, filtri e ricerca, salva le segnalazioni, annuncia i risultati
+docs/js/script.js          → genera le schede e la finestra dei dettagli, filtri e ricerca, salva le segnalazioni, annuncia i risultati
 docs/js/preferiti.js       → salva e rilegge i punti preferiti (localStorage)
 docs/js/tema.js            → tema chiaro/scuro, con la scelta salvata nel browser
 docs/js/validazione.js     → controlli del modulo di segnalazione, con l'errore sotto ogni campo
@@ -104,7 +104,8 @@ Nel `localStorage` restano solo le **segnalazioni dei cittadini**, non tutto l'e
 
 - **Ricerca testuale** in cima ai filtri: cerca nel nome, nella descrizione e nell'indirizzo, senza distinguere maiuscole e accenti ("cafe" trova "Café"). Con più parole il punto deve contenerle tutte. Si combina con i tre gruppi di filtri e i conteggi delle pillole ne tengono conto.
 - **Messaggio "nessun risultato" visibile** sopra l'elenco quando ricerca e filtri non trovano nulla, oltre all'annuncio per i lettori di schermo.
-- **Preferiti**: ogni scheda ha il bottone "♡ Preferito" (un vero `<button>` con `aria-pressed`). Nel `localStorage` si salva solo l'elenco degli `id` dei punti, non le schede. Al primo avvio, quando non c'è ancora nulla di salvato, si parte da un elenco vuoto. La pillola "Solo i miei preferiti" mostra solo i punti salvati.
+- **Schede essenziali e finestra dei dettagli**: nell'elenco ogni scheda mostra solo nome, azioni e "zona · indirizzo", così si scorre in fretta. Toccando la scheda si apre una finestra (`<dialog>` con `showModal()`) con descrizione, oggetti accettati, orari e sito. Il browser tiene il focus dentro la finestra e la chiude con Esc; si chiude anche con "Chiudi" o toccando fuori, e il focus torna alla scheda. Sul telefono la finestra sale dal basso. In stampa i dettagli completi compaiono dentro ogni scheda.
+- **Preferiti**: ogni scheda ha il cuore "♡" e la finestra dei dettagli il bottone "♡ Preferito" (veri `<button>` con `aria-pressed`, sempre allineati tra loro). Nel `localStorage` si salva solo l'elenco degli `id` dei punti, non le schede. Al primo avvio, quando non c'è ancora nulla di salvato, si parte da un elenco vuoto. La pillola "Solo i miei preferiti" mostra solo i punti salvati.
 - **Tema scuro**: bottone "Tema scuro" nella testata di entrambe le pagine. Se l'utente non ha mai scelto, il sito segue l'impostazione del sistema (`prefers-color-scheme`). Il tema ridefinisce le variabili di `01-variabili.css`, quindi gli altri file CSS non cambiano. Contrasti del testo ≥ 7:1 anche nel tema scuro; la stampa resta sempre chiara.
 
 ### 6. SEO di base

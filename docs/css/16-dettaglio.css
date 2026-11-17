@@ -1,0 +1,114 @@
+/* ---------- 16. Finestra dei dettagli di un punto ---------- */
+/* È un <dialog> aperto con showModal() da script.js: il browser tiene il
+   focus dentro la finestra, la chiude con Esc e rende inerte il resto
+   della pagina. Il colore della fascia in alto segue la prima azione del
+   punto, come nelle schede (vedi 08-elenco.css). */
+
+.dettaglio {
+  width: min(100% - 2rem, 38rem);
+  max-height: min(90vh, 48rem);
+  padding: 0;                    /* ogni clic dentro cade sul contenuto: un clic sul <dialog> vuol dire "fuori" */
+  border: 2px solid var(--tratto);
+  border-radius: var(--raggio) 1.75rem var(--raggio) var(--raggio);
+  background: var(--carta-chiara);
+  color: var(--inchiostro);
+  box-shadow: var(--ombra-alta);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.dettaglio[open] { animation: dettaglio-entra 0.2s ease-out; }
+@keyframes dettaglio-entra {
+  from { opacity: 0; transform: translateY(1.5rem); }
+}
+
+.dettaglio::backdrop {
+  /* ::backdrop non eredita le variabili in tutti i browser: colore scritto a mano */
+  background: rgb(29 27 23 / 0.6);
+}
+
+/* Con la finestra aperta la pagina sotto non scorre */
+/* (scrollbar-gutter tiene lo spazio della barra: la pagina sotto non si sposta) */
+html:has(.dettaglio[open]) { overflow: hidden; scrollbar-gutter: stable; }
+
+/* Fascia colorata del cartellino, con il bottone "Chiudi": resta in vista
+   anche quando il contenuto è lungo e scorre */
+.dettaglio__testa {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 2px solid var(--tratto);
+  background:
+    repeating-linear-gradient(-45deg, transparent 0 8px, rgb(0 0 0 / 0.05) 8px 10px),
+    var(--tinta);
+}
+.dettaglio__chiudi {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  padding: 0.4rem 0.9rem;
+  border: 2px solid var(--tratto);
+  border-radius: 999px;
+  background: var(--carta-chiara);
+  color: var(--inchiostro);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.dettaglio__chiudi:hover { background: var(--carta-scura); }
+
+.dettaglio__corpo { padding: 1.25rem 1.5rem 1.5rem; }
+.dettaglio h2 {
+  font-size: clamp(1.5rem, 4.5vw, 1.9rem);
+  color: var(--inchiostro);
+}
+/* Il titolo riceve il focus solo da script.js, per farlo leggere subito:
+   non è un controllo, quindi niente anello */
+.dettaglio h2:focus { outline: none; }
+
+.dettaglio__descrizione { font-size: 1.125rem; }
+.dettaglio .scheda__info { margin-bottom: 1.25rem; }
+.dettaglio__azioni {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Telefoni: la finestra sale dal basso e occupa tutta la larghezza,
+   così il pollice arriva comodo a "Chiudi" e "Preferito" */
+@media (max-width: 47.99rem) {
+  .dettaglio {
+    width: 100%;
+    max-width: 100%;
+    max-height: 88vh;
+    margin: auto 0 0;
+    border-width: 2px 0 0;
+    border-radius: 1.25rem 1.25rem 0 0;
+    box-shadow: none;
+  }
+  .dettaglio[open] { animation-name: dettaglio-sale; animation-duration: 0.25s; }
+  .dettaglio__testa { border-radius: calc(1.25rem - 2px) calc(1.25rem - 2px) 0 0; }
+  .dettaglio__corpo { padding: 1rem 1rem 1.5rem; }
+  .dettaglio__azioni .preferito { width: 100%; justify-content: center; }
+}
+@keyframes dettaglio-sale {
+  from { transform: translateY(100%); }
+}
+
+@media screen {
+  :where([data-tema="scuro"]) .dettaglio::backdrop { background: rgb(0 0 0 / 0.7); }
+}
+
+@media (forced-colors: active) {
+  .dettaglio, .dettaglio__chiudi { border: 2px solid CanvasText; }
+}
+
+/* Stampa: niente finestra; i dettagli completi sono già dentro ogni scheda */
+@media print {
+  .dettaglio { display: none !important; }
+  .solo-stampa { display: block; }
+  .solo-stampa .etichette { margin-top: 0.5rem; }
+}

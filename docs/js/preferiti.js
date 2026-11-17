@@ -47,37 +47,47 @@ function cambiaPreferito(id) {
 
 // Bottone "interruttore": il testo resta uguale, aria-pressed dice se è attivo.
 // Il cuore pieno o vuoto lo mostra anche a chi non distingue i colori.
-function creaBottonePreferito(punto) {
+// "compatto" (nelle schede dell'elenco): solo il cuore, il testo resta per i lettori di schermo.
+function creaBottonePreferito(punto, compatto = false) {
     const attivo = ePreferito(punto.id);
+    const testo = compatto
+        ? `<span class="solo-lettori">Preferito: ${escapeHtml(punto.nome)}</span>`
+        : `Preferito<span class="solo-lettori">: ${escapeHtml(punto.nome)}</span>`;
     return `
-        <button type="button" class="preferito" data-id="${escapeHtml(punto.id)}" aria-pressed="${attivo}">
+        <button type="button" class="preferito${compatto ? " preferito--compatto" : ""}" data-id="${escapeHtml(punto.id)}" aria-pressed="${attivo}">
             <span class="preferito__icona" aria-hidden="true">${attivo ? "♥" : "♡"}</span>
-            Preferito<span class="solo-lettori">: ${escapeHtml(punto.nome)}</span>
+            ${testo}
         </button>
     `;
 }
 
-function aggiornaBottonePreferito(bottone, attivo) {
-    bottone.setAttribute("aria-pressed", String(attivo));
-    bottone.querySelector(".preferito__icona").textContent = attivo ? "♥" : "♡";
+// Aggiorna tutti i bottoni dello stesso punto (scheda e finestra dei dettagli)
+function aggiornaBottoniPreferito(id, attivo) {
+    document.querySelectorAll(`.preferito[data-id="${CSS.escape(id)}"]`).forEach(bottone => {
+        bottone.setAttribute("aria-pressed", String(attivo));
+        bottone.querySelector(".preferito__icona").textContent = attivo ? "♥" : "♡";
+    });
 }
 
-// Un solo ascoltatore su tutto l'elenco (delega degli eventi):
-// funziona per ogni scheda, anche se l'elenco viene ridisegnato.
+// Un solo ascoltatore per contenitore (delega degli eventi): funziona per ogni
+// scheda, anche se l'elenco o la finestra dei dettagli vengono ridisegnati.
 // "alCambio" riapplica i filtri, utile quando è attivo "Solo i miei preferiti".
-function gestisciPreferiti(elenco, alCambio) {
-    elenco.addEventListener("click", evento => {
-        const bottone = evento.target.closest(".preferito");
-        if (!bottone) {
-            return;
-        }
-        aggiornaBottonePreferito(bottone, cambiaPreferito(bottone.dataset.id));
-        alCambio();
+function gestisciPreferiti(contenitori, alCambio) {
+    contenitori.filter(Boolean).forEach(contenitore => {
+        contenitore.addEventListener("click", evento => {
+            const bottone = evento.target.closest(".preferito");
+            if (!bottone) {
+                return;
+            }
+            aggiornaBottoniPreferito(bottone.dataset.id, cambiaPreferito(bottone.dataset.id));
+            alCambio();
 
-        // Se la scheda è sparita (filtro "solo preferiti"), il focus non va perso
-        const sezione = elenco.closest(".risultati");
-        if (bottone.closest(".punto").hidden && sezione) {
-            sezione.focus();
-        }
+            // Se la scheda è sparita (filtro "solo preferiti"), il focus non va perso
+            const punto = bottone.closest(".punto");
+            const sezione = document.getElementById("risultati");
+            if (punto && punto.hidden && sezione) {
+                sezione.focus();
+            }
+        });
     });
 }

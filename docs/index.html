@@ -40,6 +40,7 @@
   <link rel="stylesheet" href="css/12-accessibilita.css">
   <link rel="stylesheet" href="css/13-ricerca-preferiti.css">
   <link rel="stylesheet" href="css/14-tema-scuro.css">
+  <link rel="stylesheet" href="css/16-dettaglio.css">
   <!-- tema.js senza defer: applica il tema prima che la pagina venga disegnata -->
   <script src="js/tema.js"></script>
   <script src="js/data.js" defer></script>
@@ -170,6 +171,9 @@
         </div>
       </section>
     </div>
+
+    <!-- Finestra con tutti i dettagli di un punto: la riempie script.js quando si apre una scheda -->
+    <dialog id="dettaglio" class="dettaglio" aria-labelledby="dettaglio-titolo"></dialog>
 
     <section class="invito" aria-labelledby="titolo-invito">
       <div class="contenitore">

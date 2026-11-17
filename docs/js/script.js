@@ -76,17 +76,9 @@ function sitoSicuro(sito) {
     }
 }
 
-function creaScheda(punto) {
-    const idTitolo = "p-" + punto.id;
-
-    const etichetteAzioni = punto.azioni
-        .map(azione => `<li class="etichetta etichetta--${azione}">${NOMI_AZIONI[azione]}</li>`)
-        .join("");
-
-    const etichetteCategorie = punto.categorie
-        .map(categoria => `<li class="etichetta">${NOMI_CATEGORIE[categoria]}</li>`)
-        .join("");
-
+// Righe dei dettagli (zona, indirizzo, orari, sito): usate dalla finestra
+// dei dettagli e dalla versione stampata della scheda
+function creaInfo(punto) {
     // Gli orari sono facoltativi: la riga compare solo se ci sono
     const rigaOrari = punto.orari
         ? `<div><dt>Orari</dt><dd>${escapeHtml(punto.orari)}</dd></div>`
@@ -99,26 +91,137 @@ function creaScheda(punto) {
         : "";
 
     return `
+        <dl class="scheda__info">
+            <div><dt>Zona</dt><dd>${NOMI_ZONE[punto.zona]}</dd></div>
+            <div><dt>Indirizzo</dt><dd>${escapeHtml(punto.indirizzo)}</dd></div>
+            ${rigaOrari}
+            ${rigaSito}
+        </dl>
+    `;
+}
+
+function creaEtichetteAzioni(punto) {
+    return punto.azioni
+        .map(azione => `<li class="etichetta etichetta--${azione}">${NOMI_AZIONI[azione]}</li>`)
+        .join("");
+}
+
+function creaEtichetteCategorie(punto) {
+    return punto.categorie
+        .map(categoria => `<li class="etichetta">${NOMI_CATEGORIE[categoria]}</li>`)
+        .join("");
+}
+
+// La scheda nell'elenco è essenziale: nome, cosa si può fare, dove.
+// Il nome è un bottone che apre la finestra con tutti i dettagli;
+// con il CSS tutta la scheda diventa cliccabile.
+// I dettagli completi restano nella scheda solo per la stampa.
+function creaScheda(punto) {
+    const idTitolo = "p-" + punto.id;
+
+    return `
         <li class="punto" data-id="${escapeHtml(punto.id)}" data-azione="${punto.azioni.join(" ")}" data-categoria="${punto.categorie.join(" ")}" data-zona="${punto.zona}">
             <article class="scheda" aria-labelledby="${idTitolo}">
-                <h3 id="${idTitolo}">${escapeHtml(punto.nome)}</h3>
-                <ul class="etichette" aria-label="Cosa puoi fare e quali oggetti">
-                    ${etichetteAzioni}
-                    ${etichetteCategorie}
+                <h3 id="${idTitolo}">
+                    <button type="button" class="scheda__apri" data-id="${escapeHtml(punto.id)}" aria-haspopup="dialog">${escapeHtml(punto.nome)}</button>
+                </h3>
+                <ul class="etichette" aria-label="Cosa puoi fare">
+                    ${creaEtichetteAzioni(punto)}
                 </ul>
-                <p class="scheda__descrizione">${escapeHtml(punto.descrizione)}</p>
-                <dl class="scheda__info">
-                    <div><dt>Zona</dt><dd>${NOMI_ZONE[punto.zona]}</dd></div>
-                    <div><dt>Indirizzo</dt><dd>${escapeHtml(punto.indirizzo)}</dd></div>
-                    ${rigaOrari}
-                    ${rigaSito}
-                </dl>
-                <div class="scheda__azioni">
-                    ${creaBottonePreferito(punto)}
+                <p class="scheda__dove">
+                    <span class="solo-lettori">Dove: </span>${NOMI_ZONE[punto.zona]} · ${escapeHtml(punto.indirizzo)}
+                </p>
+                <div class="scheda__piede">
+                    <span class="scheda__dettagli" aria-hidden="true">Dettagli <span class="scheda__freccia">→</span></span>
+                    ${creaBottonePreferito(punto, true)}
+                </div>
+                <div class="solo-stampa">
+                    <ul class="etichette">${creaEtichetteCategorie(punto)}</ul>
+                    <p>${escapeHtml(punto.descrizione)}</p>
+                    ${creaInfo(punto)}
                 </div>
             </article>
         </li>
     `;
+}
+
+// ---------- Finestra dei dettagli (index.html) ----------
+// Usa l'elemento <dialog> del browser: con showModal() il focus resta
+// dentro la finestra, Esc la chiude e il resto della pagina non si può
+// usare finché è aperta (anche dai lettori di schermo).
+
+function creaDettaglio(punto) {
+    return `
+        <div class="dettaglio__testa">
+            <button type="button" class="dettaglio__chiudi" data-chiudi>
+                <span aria-hidden="true">✕</span> Chiudi
+            </button>
+        </div>
+        <div class="dettaglio__corpo">
+            <h2 id="dettaglio-titolo">${escapeHtml(punto.nome)}</h2>
+            <ul class="etichette" aria-label="Cosa puoi fare e quali oggetti">
+                ${creaEtichetteAzioni(punto)}
+                ${creaEtichetteCategorie(punto)}
+            </ul>
+            <p class="dettaglio__descrizione">${escapeHtml(punto.descrizione)}</p>
+            ${creaInfo(punto)}
+            <div class="dettaglio__azioni">
+                ${creaBottonePreferito(punto)}
+            </div>
+        </div>
+    `;
+}
+
+function gestisciDettaglio(finestra, elenco, punti) {
+    if (!finestra || typeof finestra.showModal !== "function") {
+        return;
+    }
+    let apertoDa = null;
+
+    elenco.addEventListener("click", evento => {
+        const bottone = evento.target.closest(".scheda__apri");
+        if (!bottone) {
+            return;
+        }
+        const punto = punti.find(p => p.id === bottone.dataset.id);
+        if (!punto) {
+            return;
+        }
+        apertoDa = bottone;
+        finestra.dataset.azione = punto.azioni.join(" ");
+        finestra.innerHTML = creaDettaglio(punto);
+        finestra.showModal();
+        // Il focus va sul titolo: il lettore di schermo legge subito il nome del punto
+        // (il bottone "Chiudi" resta il primo elemento raggiungibile con Tab)
+        const titolo = finestra.querySelector("h2");
+        titolo.tabIndex = -1;
+        titolo.focus();
+    });
+
+    // Chiude con il bottone "Chiudi" o con un clic sullo sfondo scuro fuori dalla finestra
+    finestra.addEventListener("click", evento => {
+        if (evento.target === finestra || evento.target.closest("[data-chiudi]")) {
+            finestra.close();
+        }
+    });
+
+    // Alla chiusura il focus torna sulla scheda da cui si era partiti
+    finestra.addEventListener("close", () => {
+        if (!apertoDa) {
+            return;
+        }
+        // Se intanto la scheda è stata nascosta (tolta dai preferiti con
+        // "Solo i miei preferiti" attivo), il focus va all'elenco
+        const punto = apertoDa.closest(".punto");
+        if (punto && !punto.hidden) {
+            apertoDa.focus();
+        } else {
+            const sezione = document.getElementById("risultati");
+            if (sezione) {
+                sezione.focus();
+            }
+        }
+    });
 }
 
 function mostraPunti(elenco, punti) {
@@ -550,10 +653,12 @@ if (elencoPunti) {
             document.getElementById("nessun-risultato")
         );
     }
-    gestisciPreferiti(elencoPunti, aggiornaFiltri);
+    const finestraDettaglio = document.getElementById("dettaglio");
+    gestisciDettaglio(finestraDettaglio, elencoPunti, punti);
+    gestisciPreferiti([elencoPunti, finestraDettaglio], aggiornaFiltri);
 }
 
 const moduloSegnala = document.getElementById("modulo-segnala");
 if (moduloSegnala) {
     gestisciModulo(moduloSegnala);
-}
+}
