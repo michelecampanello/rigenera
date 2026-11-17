@@ -1,6 +1,6 @@
 // ==========================================================================
 // Filtri, ricerca e conteggi (index.html)
-// Le pillole dei tre menu a tendina nascono da GRUPPI_FILTRI di comune.js.
+// Le voci dei tre menu a tendina nascono da GRUPPI_FILTRI di comune.js.
 // Ogni cambio di filtro nasconde le schede che non corrispondono, aggiorna
 // i conteggi e il testo dei menu e annuncia il numero di punti ai lettori
 // di schermo. Apertura e chiusura delle tendine sono in tendine.js.
@@ -49,31 +49,34 @@ function superaFiltri(punto, scelte, gruppoDaIgnorare) {
         );
 }
 
-// Ogni opzione è una pillola: un radio vero (raggiungibile da tastiera e
-// lettori di schermo, frecce per cambiare scelta) nascosto sotto l'etichetta.
+// Ogni voce del menu è un radio vero (raggiungibile da tastiera e lettori
+// di schermo, frecce per cambiare scelta), nascosto sotto la riga visibile.
 // Il testo senza numero resta in data-testo, per il bottone del menu.
-function creaPillola(gruppo, valore, testo) {
+function creaOpzione(gruppo, valore, testo) {
     const selezionata = valore === TUTTI ? " checked" : "";
     return `
-        <label class="chip">
+        <label class="opzione">
             <input type="radio" name="${gruppo.nome}" value="${valore}" data-testo="${escapeHtml(testo)}"${selezionata}>
-            <span>${escapeHtml(testo)} <span class="chip__conteggio"></span></span>
+            <span class="opzione__riga">
+                <span class="opzione__testo">${escapeHtml(testo)}</span>
+                <span class="opzione__conteggio"></span>
+            </span>
         </label>
     `;
 }
 
-// Riempie le tre tendine. La prima pillola ("Tutto", "Tutti", "Tutte") è
+// Riempie le tre tendine. La prima voce ("Tutto", "Tutti", "Tutte") è
 // quella iniziale, quindi "Azzera i filtri" (un reset del form) torna lì.
 function creaMenu(filtri) {
     GRUPPI_FILTRI.forEach(gruppo => {
-        const contenitore = filtri.querySelector(`.chips[data-gruppo="${gruppo.nome}"]`);
+        const contenitore = filtri.querySelector(`.opzioni[data-gruppo="${gruppo.nome}"]`);
         if (!contenitore) {
             return;
         }
         const etichette = gruppo.etichette || {};
-        const pillole = Object.entries(gruppo.voci)
-            .map(([valore, nome]) => creaPillola(gruppo, valore, etichette[valore] || nome));
-        contenitore.innerHTML = creaPillola(gruppo, TUTTI, gruppo.tutti) + pillole.join("");
+        const opzioni = Object.entries(gruppo.voci)
+            .map(([valore, nome]) => creaOpzione(gruppo, valore, etichette[valore] || nome));
+        contenitore.innerHTML = creaOpzione(gruppo, TUTTI, gruppo.tutti) + opzioni.join("");
     });
 }
 
@@ -113,7 +116,7 @@ function applicaFiltri(filtri, elenco, punti) {
     return visibili;
 }
 
-// Accanto a ogni pillola: quanti punti si troverebbero scegliendola,
+// Accanto a ogni voce: quanti punti si troverebbero scegliendola,
 // tenendo fermi gli altri filtri. Il bottone del menu mostra la scelta
 // attuale con il suo numero, es. "Riparare (5)", ed è evidenziato se
 // il gruppo non è su "Tutti".
@@ -126,10 +129,10 @@ function aggiornaConteggiMenu(filtri, punti, scelte) {
         const candidati = punti.filter(punto => superaFiltri(punto, scelte, gruppo));
         menu.querySelectorAll(`input[name="${gruppo.nome}"]`).forEach(input => {
             const quanti = candidati.filter(punto => superaGruppo(punto, gruppo, input.value)).length;
-            const pillola = input.closest(".chip");
-            pillola.querySelector(".chip__conteggio").innerHTML =
+            const voce = input.closest(".opzione");
+            voce.querySelector(".opzione__conteggio").innerHTML =
                 `${quanti}<span class="solo-lettori"> ${quanti === 1 ? "punto" : "punti"}</span>`;
-            pillola.classList.toggle("chip--vuota", quanti === 0);
+            voce.classList.toggle("opzione--vuota", quanti === 0);
             if (input.checked) {
                 menu.querySelector(".menu-filtro__valore").textContent = `${input.dataset.testo} (${quanti})`;
             }

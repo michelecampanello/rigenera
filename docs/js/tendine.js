@@ -1,11 +1,11 @@
 // ==========================================================================
 // Menu a tendina dei filtri (index.html)
-// Ogni menu è un bottone che apre una "tendina" con le pillole del gruppo.
-// Le pillole sono radio veri dentro un fieldset: il menu non cambia il modo
-// di scegliere, cambia solo dove stanno le scelte.
+// Ogni menu è un bottone che apre una "tendina" con l'elenco delle voci.
+// Le voci sono radio veri dentro un fieldset: si può disegnarle con lo stile
+// del sito (l'elenco aperto di un <select> lo disegna il sistema operativo).
 // - clic sul bottone: apre o chiude (aria-expanded dice se è aperta);
 //   aprendone una, le altre si chiudono
-// - clic su una pillola: sceglie e chiude
+// - clic su una voce: sceglie e chiude
 // - tastiera: Tab entra nella tendina, le frecce cambiano scelta (resta
 //   aperta, così si possono provare le voci), Esc chiude e torna al bottone
 // - clic o focus fuori dal menu: chiude
@@ -54,7 +54,7 @@ function gestisciTendine(filtri) {
             apriTendina(menu, !aperta);
         });
 
-        // Clic con mouse o dito su una pillola: scelta fatta, la tendina si chiude.
+        // Clic con mouse o dito su una voce: scelta fatta, la tendina si chiude.
         // Con la tastiera (frecce, spazio) il clic arriva con detail 0: resta aperta.
         tendina.addEventListener("click", evento => {
             if (evento.target.matches("input") && evento.detail > 0) {
@@ -71,7 +71,7 @@ function gestisciTendine(filtri) {
             }
         });
 
-        // Il focus esce dal menu (Tab oltre l'ultima pillola): si chiude
+        // Il focus esce dal menu (Tab oltre l'ultima voce): si chiude
         menu.addEventListener("focusout", evento => {
             if (evento.relatedTarget && !menu.contains(evento.relatedTarget)) {
                 apriTendina(menu, false);
