@@ -71,7 +71,7 @@
   /* Sul giallo evidenziatore il testo resta sempre scuro */
   :where([data-tema="scuro"]) .logo__segno,
   :where([data-tema="scuro"]) .menu a[aria-current="page"],
-  :where([data-tema="scuro"]) .chip:hover span,
+  :where([data-tema="scuro"]) .chip:hover > span,
   :where([data-tema="scuro"]) .bottone--secondario:hover,
   :where([data-tema="scuro"]) .esito__conteggio::after,
   :where([data-tema="scuro"]) .invito .bottone { color: #1d1b17; }

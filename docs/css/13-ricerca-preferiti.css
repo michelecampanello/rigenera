@@ -75,3 +75,11 @@
 @media print {
   .scheda__azioni, .vuoto { display: none !important; }
 }
+
+/* Ricerca e bottone "Filtri" sulla stessa riga */
+.cerca__riga {
+  display: flex;
+  gap: 0.5rem;
+}
+.cerca__riga input { flex: 1; min-width: 0; }
+.cerca input::placeholder { color: var(--testo-tenue); opacity: 1; }

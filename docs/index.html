@@ -63,7 +63,7 @@
       </nav>
       <button type="button" id="cambia-tema" class="tema" aria-pressed="false" hidden>
         <span class="tema__icona" aria-hidden="true"></span>
-        Tema scuro
+        <span class="tema__testo">Tema scuro</span>
       </button>
     </div>
   </header>
@@ -98,37 +98,57 @@
 
         <div class="cerca">
           <label for="cerca-testo">Cerca per nome o parola</label>
-          <input type="search" id="cerca-testo" name="testo" autocomplete="off" aria-describedby="aiuto-cerca">
-          <p class="aiuto" id="aiuto-cerca">Esempio: bici, vestiti, Via Roma.</p>
+          <div class="cerca__riga">
+            <input type="search" id="cerca-testo" name="testo" autocomplete="off" placeholder="bici, vestiti…" aria-describedby="aiuto-cerca">
+            <!-- Sui telefoni apre e chiude il pannello dei filtri (gestito da script.js) -->
+            <button type="button" class="apri-filtri" aria-expanded="true" aria-controls="pannello-filtri" hidden>
+              <span class="apri-filtri__icona" aria-hidden="true"></span>
+              Filtri
+              <span class="apri-filtri__numero" hidden></span>
+            </button>
+          </div>
+          <p class="solo-lettori" id="aiuto-cerca">Esempio: bici, vestiti, Via Roma.</p>
         </div>
 
-        <fieldset class="gruppo">
-          <legend>Cosa vuoi fare</legend>
-          <div class="chips" data-gruppo="azione"></div>
-        </fieldset>
+        <!-- Filtri attivi, ognuno si toglie con un tocco (solo sui telefoni, gestito da script.js) -->
+        <div class="filtri-attivi" aria-label="Filtri attivi" role="group" hidden></div>
 
-        <fieldset class="gruppo">
-          <legend>Che oggetto hai</legend>
-          <div class="chips" data-gruppo="categoria"></div>
-        </fieldset>
+        <div class="filtri__pannello" id="pannello-filtri">
+          <fieldset class="gruppo">
+            <legend>Cosa vuoi fare</legend>
+            <div class="chips" data-gruppo="azione"></div>
+          </fieldset>
 
-        <fieldset class="gruppo">
-          <legend>In che zona</legend>
-          <div class="chips" data-gruppo="zona"></div>
-        </fieldset>
+          <fieldset class="gruppo">
+            <legend>Che oggetto hai</legend>
+            <div class="chips" data-gruppo="categoria"></div>
+          </fieldset>
 
-        <div class="gruppo gruppo--preferiti">
-          <label class="chip">
-            <input type="checkbox" name="solo-preferiti">
-            <span>Solo i miei preferiti</span>
-          </label>
+          <fieldset class="gruppo">
+            <legend>In che zona</legend>
+            <div class="chips" data-gruppo="zona"></div>
+          </fieldset>
+
+          <div class="gruppo gruppo--preferiti">
+            <label class="chip">
+              <input type="checkbox" name="solo-preferiti">
+              <span>Solo i miei preferiti</span>
+            </label>
+          </div>
+
+          <div class="filtri__comandi">
+            <button type="reset" class="bottone bottone--secondario">Azzera i filtri</button>
+            <!-- Solo sui telefoni: chiude il pannello e porta all'elenco -->
+            <button type="button" class="bottone mostra-punti" hidden>Mostra i punti</button>
+          </div>
         </div>
-
-        <button type="reset" class="bottone bottone--secondario">Azzera i filtri</button>
       </form>
 
       <section id="risultati" class="risultati" aria-labelledby="titolo-risultati" tabindex="-1">
-        <h2 id="titolo-risultati">Punti della guida</h2>
+        <div class="risultati__testa">
+          <h2 id="titolo-risultati">Punti della guida</h2>
+          <p class="risultati__conteggio" id="conteggio-risultati" hidden></p>
+        </div>
 
         <noscript>
           <p class="messaggio messaggio--errore">Per vedere l'elenco dei punti è necessario attivare JavaScript nel browser.</p>

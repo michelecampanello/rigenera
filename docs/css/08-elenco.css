@@ -156,3 +156,33 @@
    categoria o zona basta una voce in NOMI_CATEGORIE o NOMI_ZONE:
    il CSS non va toccato. */
 .punto[hidden] { display: none; }
+
+/* Titolo dell'elenco con il numero di punti trovati accanto */
+.risultati__testa {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  margin-bottom: 1.25rem;
+}
+.risultati__testa h2 { margin: 0; }
+.risultati__conteggio {
+  margin: 0;
+  padding: 0.1rem 0.7rem;
+  border: 2px solid var(--inchiostro);
+  border-radius: 999px;
+  background: var(--carta-chiara);
+  font-size: 1rem;
+  font-weight: 700;
+}
+.risultati__conteggio[hidden] { display: none; }
+
+@media (max-width: 47.99rem) {
+  .guida { gap: 1.5rem; }
+  .elenco { gap: 1.25rem; }
+  .scheda { padding: 0 1rem 1rem; }
+  .scheda::before { height: 2rem; margin: 0 -1rem 0.85rem; }
+  .scheda::after { top: 0.45rem; right: 1rem; width: 1rem; height: 1rem; }
+  .scheda__info div { grid-template-columns: 5.25rem 1fr; }
+}

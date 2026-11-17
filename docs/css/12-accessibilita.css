@@ -9,7 +9,7 @@
 
 /* Modalità a contrasto elevato di Windows: si garantiscono bordi visibili */
 @media (forced-colors: active) {
-  .chip span, .scheda, .etichetta, .filtri, .bottone, .esito, .modulo fieldset { border: 2px solid CanvasText; }
+  .chip > span, .scheda, .etichetta, .filtri, .bottone, .esito, .modulo fieldset { border: 2px solid CanvasText; }
   .chip input:checked + span { border-width: 4px; }
   .evidenzia { background: none; text-decoration: underline; }
 }

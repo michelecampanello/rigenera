@@ -272,22 +272,151 @@ function mostraNessunRisultato(riquadro, visibili, scelte) {
     }
 }
 
+function testoPunti(quanti) {
+    if (quanti === 0) {
+        return "Nessun punto";
+    }
+    return quanti === 1 ? "1 punto" : quanti + " punti";
+}
+
+// ---------- Filtri compatti sui telefoni ----------
+// Sugli schermi piccoli i gruppi di filtri stanno in un pannello che si apre
+// con il bottone "Filtri" accanto alla ricerca. Sopra l'elenco restano solo
+// le pillole dei filtri attivi, che si tolgono con un tocco.
+// Senza JavaScript il pannello resta sempre aperto.
+
+const SCHERMO_LARGO = window.matchMedia("(min-width: 62rem)");
+
+// I filtri scelti, come elenco di { testo, togli }: "togli" li riporta a "Tutti"
+function filtriAttivi(filtri) {
+    const attivi = [];
+    GRUPPI_FILTRI.forEach(gruppo => {
+        const scelto = filtri.querySelector(`input[name="${gruppo.nome}"]:checked`);
+        if (!scelto || scelto.value === TUTTI) {
+            return;
+        }
+        const etichette = gruppo.etichette || {};
+        attivi.push({
+            testo: etichette[scelto.value] || gruppo.voci[scelto.value],
+            togli: () => { filtri.querySelector(`input[name="${gruppo.nome}"][value="${TUTTI}"]`).checked = true; }
+        });
+    });
+
+    const ricerca = filtri.querySelector('input[name="testo"]');
+    if (ricerca && ricerca.value.trim()) {
+        attivi.push({ testo: "«" + ricerca.value.trim() + "»", togli: () => { ricerca.value = ""; } });
+    }
+
+    const preferiti = filtri.querySelector('input[name="solo-preferiti"]');
+    if (preferiti && preferiti.checked) {
+        attivi.push({ testo: "Solo preferiti", togli: () => { preferiti.checked = false; } });
+    }
+    return attivi;
+}
+
+function mostraFiltriAttivi(filtri, contenitore, aggiorna) {
+    const attivi = filtriAttivi(filtri);
+    contenitore.hidden = attivi.length === 0;
+    contenitore.innerHTML = "";
+    attivi.forEach(filtro => {
+        const bottone = document.createElement("button");
+        bottone.type = "button";
+        bottone.className = "filtro-attivo";
+        bottone.innerHTML = `${escapeHtml(filtro.testo)} <span aria-hidden="true">✕</span>`;
+        bottone.setAttribute("aria-label", "Togli il filtro " + filtro.testo);
+        bottone.addEventListener("click", () => {
+            filtro.togli();
+            aggiorna();
+            // Il bottone sparisce: il focus passa al campo di ricerca
+            filtri.querySelector('input[name="testo"]').focus();
+        });
+        contenitore.append(bottone);
+    });
+
+    const numero = filtri.querySelector(".apri-filtri__numero");
+    if (numero) {
+        numero.hidden = attivi.length === 0;
+        numero.innerHTML = `${attivi.length}<span class="solo-lettori"> attivi</span>`;
+    }
+}
+
+function gestisciPannello(filtri) {
+    const apri = filtri.querySelector(".apri-filtri");
+    const pannello = filtri.querySelector(".filtri__pannello");
+    const mostra = filtri.querySelector(".mostra-punti");
+    if (!apri || !pannello) {
+        return;
+    }
+
+    const imposta = aperto => {
+        apri.setAttribute("aria-expanded", String(aperto));
+        filtri.classList.toggle("filtri--chiusi", !aperto);
+    };
+
+    apri.hidden = false;
+    if (mostra) {
+        mostra.hidden = false;
+    }
+    imposta(false);
+
+    apri.addEventListener("click", () => {
+        const aperto = apri.getAttribute("aria-expanded") !== "true";
+        imposta(aperto);
+        if (aperto) {
+            // Nelle righe che scorrono di lato, la pillola scelta deve essere in vista
+            pannello.querySelectorAll(".chips input:checked").forEach(input =>
+                input.closest(".chip").scrollIntoView({ block: "nearest", inline: "nearest" }));
+            pannello.querySelector("input").focus({ preventScroll: true });
+        }
+    });
+
+    // "Mostra i punti": chiude il pannello e porta all'elenco
+    if (mostra) {
+        mostra.addEventListener("click", () => {
+            imposta(false);
+            const risultati = document.getElementById("risultati");
+            if (risultati) {
+                risultati.focus();
+                risultati.scrollIntoView({ block: "start" });
+            }
+        });
+    }
+}
+
 // Restituisce la funzione che riapplica i filtri, usata anche dai preferiti
 function gestisciFiltri(filtri, elenco, annuncio, punti, nessunRisultato) {
     creaPillole(filtri);
-    // Al caricamento: solo conteggi e messaggio, nessun annuncio
-    const visibiliIniziali = applicaFiltri(filtri, elenco, punti);
-    mostraNessunRisultato(nessunRisultato, visibiliIniziali, leggiScelte(filtri));
+    gestisciPannello(filtri);
 
-    const aggiorna = () => {
+    const conteggio = document.getElementById("conteggio-risultati");
+    const contenitoreAttivi = filtri.querySelector(".filtri-attivi");
+    const mostra = filtri.querySelector(".mostra-punti");
+
+    // Aggiorna tutto quello che dipende dai filtri; "annuncia" è falso al caricamento
+    const aggiorna = (annuncia = true) => {
         const visibili = applicaFiltri(filtri, elenco, punti);
         mostraNessunRisultato(nessunRisultato, visibili, leggiScelte(filtri));
-        if (annuncio) {
+        if (conteggio) {
+            conteggio.hidden = false;
+            conteggio.textContent = visibili === punti.length
+                ? `${testoPunti(visibili)} in tutto`
+                : `${testoPunti(visibili)} su ${punti.length}`;
+        }
+        if (mostra) {
+            mostra.textContent = visibili === 0 ? "Nessun punto" : `Vedi ${testoPunti(visibili).toLowerCase()}`;
+        }
+        if (contenitoreAttivi) {
+            mostraFiltriAttivi(filtri, contenitoreAttivi, aggiorna);
+        }
+        if (annuncia && annuncio) {
             annunciaRisultati(annuncio, visibili);
         }
     };
 
-    filtri.addEventListener("change", aggiorna);
+    // Al caricamento: solo conteggi e messaggio, nessun annuncio
+    aggiorna(false);
+
+    filtri.addEventListener("change", () => aggiorna());
 
     // La ricerca si aggiorna mentre si scrive, con una piccola pausa
     // per non far annunciare al lettore di schermo ogni singola lettera

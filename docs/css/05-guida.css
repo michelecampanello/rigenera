@@ -4,6 +4,9 @@
   gap: 2rem;
   padding-bottom: 4rem;
 }
+/* Gli elementi della griglia non si allargano oltre la colonna
+   (le righe di pillole che scorrono di lato restano dentro lo schermo) */
+.guida > * { min-width: 0; }
 
 @media (min-width: 62rem) {
   .guida {
