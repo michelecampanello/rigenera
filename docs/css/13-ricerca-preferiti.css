@@ -1,18 +1,12 @@
 /* ---------- 13. Ricerca, preferiti e messaggio "nessun risultato" ---------- */
 
-/* Campo di ricerca in cima al pannello dei filtri */
-.cerca { margin-bottom: 1.25rem; }
-.cerca label {
-  display: block;
-  margin-bottom: 0.35rem;
-  font-weight: 700;
-}
+/* Campo di ricerca nella barra dei filtri (l'etichetta è in 06-filtri.css) */
 .cerca input {
   display: block;
   width: 100%;
   min-height: 48px;
   padding: 0.65rem 0.8rem;
-  border: 2px solid var(--inchiostro);
+  border: 2px solid var(--tratto);
   border-radius: var(--raggio);
   background: var(--carta);
   color: var(--inchiostro);
@@ -20,22 +14,15 @@
 }
 .cerca input:focus-visible { box-shadow: 4px 4px 0 var(--evidenziatore); }
 
-/* "Solo i miei preferiti": usa lo stile delle pillole (casella vera, nascosta alla vista) */
-.gruppo--preferiti { padding-top: 1rem; }
-
-/* Bottone "♡ Preferito" in fondo alla scheda */
-.scheda__azioni {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 1rem;
-}
+/* Bottone "♡ Preferito": nella finestra dei dettagli con il testo,
+   nella scheda dell'elenco solo il cuore (preferito--compatto) */
 .preferito {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   min-height: 44px;             /* area di tocco comoda */
   padding: 0.4rem 0.9rem;
-  border: 2px solid var(--inchiostro);
+  border: 2px solid var(--tratto);
   border-radius: 999px;
   background: var(--carta-chiara);
   color: var(--inchiostro);
@@ -45,6 +32,14 @@
   cursor: pointer;
 }
 .preferito:hover { background: var(--carta-scura); }
+/* Sopra il ::before del nome, che copre tutta la scheda */
+.preferito--compatto {
+  position: relative;
+  z-index: 1;
+  justify-content: center;
+  width: 44px;
+  padding: 0;
+}
 .preferito__icona {
   font-size: 1.3rem;
   line-height: 1;
@@ -54,14 +49,14 @@
 .preferito[aria-pressed="true"] {
   background: var(--dona-sfondo);
   color: var(--dona-testo);
-  box-shadow: 2px 2px 0 var(--inchiostro);
+  box-shadow: 2px 2px 0 var(--ombra-colore);
 }
 
 /* Messaggio quando ricerca e filtri non trovano nulla */
 .vuoto {
   margin: 0 0 1.5rem;
   padding: 1rem 1.25rem;
-  border: 2px dashed var(--inchiostro);
+  border: 2px dashed var(--tratto);
   border-radius: var(--raggio);
   background: var(--carta-chiara);
   font-weight: 700;
@@ -73,5 +68,7 @@
 }
 
 @media print {
-  .scheda__azioni, .vuoto { display: none !important; }
+  .scheda__piede, .vuoto { display: none !important; }
 }
+
+.cerca input::placeholder { color: var(--testo-tenue); opacity: 1; }

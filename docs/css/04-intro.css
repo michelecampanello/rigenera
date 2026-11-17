@@ -26,7 +26,7 @@
   display: inline-block;
   margin-bottom: 1rem;
   padding: 0.2rem 0.75rem;
-  border: 2px solid var(--inchiostro);
+  border: 2px solid var(--tratto);
   border-radius: 999px;
   background: var(--carta-chiara);
   font-size: 0.9375rem;
@@ -45,12 +45,12 @@
 }
 .sigillo__fondo {
   fill: var(--verde-scuro);
-  stroke: var(--inchiostro);
+  stroke: var(--tratto);
   stroke-width: 3;
 }
 .sigillo__linea {
   fill: var(--evidenziatore);
-  stroke: var(--inchiostro);
+  stroke: var(--tratto);
   stroke-width: 3;
 }
 .sigillo__testo {
@@ -77,4 +77,14 @@
   .intro { padding-block: 4rem 4.5rem; }
   .intro__riga { grid-template-columns: 1fr auto; gap: 3rem; }
   .sigillo { width: 15rem; transform: rotate(-8deg); }
+}
+
+/* Telefoni: introduzione più corta, così i filtri e i punti arrivano prima.
+   Il sigillo è solo decorativo: sui telefoni si nasconde. */
+@media (max-width: 47.99rem) {
+  .intro { padding-block: 1.5rem 1.75rem; margin-bottom: 1.5rem; }
+  .intro__occhiello { margin-bottom: 0.6rem; font-size: 0.8125rem; }
+  .intro h1 { font-size: clamp(1.9rem, 8.5vw, 2.5rem); }
+  .intro__testo { font-size: 1.0625rem; margin-bottom: 0; }
+  .sigillo { display: none; }
 }

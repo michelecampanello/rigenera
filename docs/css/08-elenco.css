@@ -4,7 +4,7 @@
 
 .elenco {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15.5rem), 1fr));
   gap: 1.75rem 1.5rem;
   margin: 0;
   padding: 0;
@@ -13,12 +13,13 @@
 
 .punto { counter-increment: punti; display: flex; }
 
-/* Colore del cartellino: segue la PRIMA azione del punto */
-.punto                          { --tinta: var(--verde-chiaro);   --tinta-testo: var(--verde-scuro); }
-.punto[data-azione^="ripara"]   { --tinta: var(--ripara-sfondo);  --tinta-testo: var(--ripara-testo); }
-.punto[data-azione^="dona"]     { --tinta: var(--dona-sfondo);    --tinta-testo: var(--dona-testo); }
-.punto[data-azione^="scambia"]  { --tinta: var(--scambia-sfondo); --tinta-testo: var(--scambia-testo); }
-.punto[data-azione^="ricicla"]  { --tinta: var(--ricicla-sfondo); --tinta-testo: var(--ricicla-testo); }
+/* Colore del cartellino: segue la PRIMA azione del punto
+   (vale anche per la finestra dei dettagli, vedi 16-dettaglio.css) */
+.punto, .dettaglio              { --tinta: var(--verde-chiaro);   --tinta-testo: var(--verde-scuro); }
+.punto[data-azione^="ripara"], .dettaglio[data-azione^="ripara"]   { --tinta: var(--ripara-sfondo);  --tinta-testo: var(--ripara-testo); }
+.punto[data-azione^="dona"], .dettaglio[data-azione^="dona"]     { --tinta: var(--dona-sfondo);    --tinta-testo: var(--dona-testo); }
+.punto[data-azione^="scambia"], .dettaglio[data-azione^="scambia"]  { --tinta: var(--scambia-sfondo); --tinta-testo: var(--scambia-testo); }
+.punto[data-azione^="ricicla"], .dettaglio[data-azione^="ricicla"]  { --tinta: var(--ricicla-sfondo); --tinta-testo: var(--ricicla-testo); }
 
 /* La scheda è un cartellino: fascia colorata in alto, foro per il filo, linea tratteggiata */
 .scheda {
@@ -27,7 +28,7 @@
   flex-direction: column;
   width: 100%;
   padding: 0 1.25rem 1.25rem;
-  border: 2px solid var(--inchiostro);
+  border: 2px solid var(--tratto);
   border-radius: var(--raggio) 1.75rem var(--raggio) var(--raggio);
   background: var(--carta-chiara);
   box-shadow: var(--ombra);
@@ -38,9 +39,9 @@
 .scheda::before {
   content: "";
   display: block;
-  height: 2.75rem;
+  height: 2.25rem;
   margin: 0 -1.25rem 1rem;
-  border-bottom: 2px solid var(--inchiostro);
+  border-bottom: 2px solid var(--tratto);
   border-radius: calc(var(--raggio) - 2px) calc(1.75rem - 2px) 0 0;
   background:
     repeating-linear-gradient(-45deg, transparent 0 8px, rgb(0 0 0 / 0.05) 8px 10px),
@@ -54,14 +55,72 @@
   right: 1.25rem;
   width: 1.15rem;
   height: 1.15rem;
-  border: 2px solid var(--inchiostro);
+  border: 2px solid var(--tratto);
   border-radius: 50%;
   background: var(--carta);
   box-shadow: inset 2px 2px 0 rgb(0 0 0 / 0.15);
 }
 
 .scheda h3 { margin-bottom: 0.6rem; color: var(--inchiostro); }
-.scheda__descrizione { flex-grow: 1; }
+
+/* Il nome è un bottone che apre i dettagli. Il suo ::before si stende su
+   tutta la scheda: si può toccare ovunque, ma per tastiera e lettori di
+   schermo resta un solo bottone, con il nome del punto come testo. */
+.scheda__apri {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.scheda__apri::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+/* L'anello di focus circonda tutta la scheda, non solo il nome */
+.scheda__apri:focus-visible { outline: none; }
+.scheda__apri:focus-visible::before {
+  outline: 3px solid var(--focus);
+  outline-offset: 4px;
+  border-radius: var(--raggio) 1.75rem var(--raggio) var(--raggio);
+}
+.scheda:hover .scheda__apri { text-decoration: underline; text-decoration-thickness: 0.08em; text-underline-offset: 0.18em; }
+
+/* Dove si trova, in una riga: "Nord · Via dei Mulini 14" */
+.scheda__dove {
+  flex-grow: 1;
+  margin: 0 0 1rem;
+  color: var(--testo-tenue);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.scheda__piede {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 2px dashed var(--bordo);
+}
+/* "Dettagli →" nel colore dell'azione: è solo un indizio visivo,
+   il bottone vero è il nome del punto */
+.scheda__dettagli {
+  color: var(--tinta-testo);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.scheda__freccia { display: inline-block; transition: transform 0.15s; }
+.scheda:hover .scheda__freccia { transform: translateX(4px); }
+
+/* I dettagli completi nella scheda servono solo per la stampa */
+.solo-stampa { display: none; }
 
 .etichette {
   display: flex;
@@ -126,7 +185,7 @@
   gap: 0.5rem;
   margin-top: 2rem;
   padding: 1.25rem 1.5rem;
-  border: 2px dashed var(--inchiostro);
+  border: 2px dashed var(--tratto);
   border-radius: var(--raggio);
   background: var(--carta-chiara);
 }
@@ -143,7 +202,7 @@
   content: counter(punti);
   padding: 0 0.3em;
   background: var(--evidenziatore);
-  border: 2px solid var(--inchiostro);
+  border: 2px solid var(--tratto);
   border-radius: 0.4rem;
   font-family: var(--font-titoli);
   font-size: 2rem;
@@ -151,8 +210,58 @@
 }
 .esito p:last-child { margin-bottom: 0; }
 
-/* Filtri: le pillole e la logica sono in script.js. Le schede che non
+/* Filtri: i menu e la logica sono in filtri.js. Le schede che non
    corrispondono ricevono l'attributo hidden. Per aggiungere una nuova
    categoria o zona basta una voce in NOMI_CATEGORIE o NOMI_ZONE:
    il CSS non va toccato. */
 .punto[hidden] { display: none; }
+
+/* Titolo dell'elenco con il numero di punti trovati accanto */
+.risultati__testa {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  margin-bottom: 1.25rem;
+}
+.risultati__testa h2 { margin: 0; }
+.risultati__conteggio {
+  margin: 0;
+  padding: 0.1rem 0.7rem;
+  border: 2px solid var(--tratto);
+  border-radius: 999px;
+  background: var(--carta-chiara);
+  font-size: 1rem;
+  font-weight: 700;
+}
+.risultati__conteggio[hidden] { display: none; }
+.risultati__testa h2 { flex: 1; }
+
+/* "Azzera i filtri": compare accanto al conteggio solo quando serve */
+.azzera {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 44px;
+  padding: 0.25rem 0.9rem;
+  border: 2px solid var(--tratto);
+  border-radius: 999px;
+  background: var(--carta-chiara);
+  color: var(--inchiostro);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.azzera:hover { background: var(--evidenziatore); color: #1d1b17; }
+.azzera[hidden] { display: none; }
+
+@media (max-width: 47.99rem) {
+  .guida { gap: 1.5rem; }
+  .elenco { gap: 1.25rem; }
+  .scheda { padding: 0 1rem 1rem; }
+  .scheda::before { height: 2rem; margin: 0 -1rem 0.85rem; }
+  .scheda::after { top: 0.45rem; right: 1rem; width: 1rem; height: 1rem; }
+  .scheda__info div { grid-template-columns: 5.25rem 1fr; }
+}

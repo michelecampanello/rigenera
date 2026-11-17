@@ -40,11 +40,18 @@
   <link rel="stylesheet" href="css/12-accessibilita.css">
   <link rel="stylesheet" href="css/13-ricerca-preferiti.css">
   <link rel="stylesheet" href="css/14-tema-scuro.css">
+  <link rel="stylesheet" href="css/16-dettaglio.css">
   <!-- tema.js senza defer: applica il tema prima che la pagina venga disegnata -->
   <script src="js/tema.js"></script>
+  <!-- Script normali con defer: si eseguono in quest'ordine, ognuno usa le funzioni dei precedenti -->
   <script src="js/data.js" defer></script>
+  <script src="js/comune.js" defer></script>
   <script src="js/preferiti.js" defer></script>
-  <script src="js/script.js" defer></script>
+  <script src="js/schede.js" defer></script>
+  <script src="js/dettaglio.js" defer></script>
+  <script src="js/tendine.js" defer></script>
+  <script src="js/filtri.js" defer></script>
+  <script src="js/avvio.js" defer></script>
 </head>
 <body>
   <a class="salta" href="#risultati">Vai direttamente ai punti</a>
@@ -63,7 +70,7 @@
       </nav>
       <button type="button" id="cambia-tema" class="tema" aria-pressed="false" hidden>
         <span class="tema__icona" aria-hidden="true"></span>
-        Tema scuro
+        <span class="tema__testo">Tema scuro</span>
       </button>
     </div>
   </header>
@@ -93,48 +100,73 @@
 
     <div class="contenitore guida">
 
-      <form class="filtri" aria-labelledby="titolo-filtri">
-        <h2 id="titolo-filtri" class="filtri__titolo">Cosa ti serve?</h2>
+      <!-- Barra dei filtri: ricerca, tre menu a tendina e preferiti.
+           Ogni menu è un bottone che apre una "tendina" con l'elenco delle voci (radio veri):
+           le crea filtri.js, le apre e chiude tendine.js -->
+      <form class="filtri" id="filtri" aria-labelledby="titolo-filtri">
+        <h2 id="titolo-filtri" class="solo-lettori">Cerca e filtra i punti</h2>
 
         <div class="cerca">
           <label for="cerca-testo">Cerca per nome o parola</label>
-          <input type="search" id="cerca-testo" name="testo" autocomplete="off" aria-describedby="aiuto-cerca">
-          <p class="aiuto" id="aiuto-cerca">Esempio: bici, vestiti, Via Roma.</p>
+          <input type="search" id="cerca-testo" name="testo" autocomplete="off" placeholder="bici, vestiti, Via Roma…" aria-describedby="aiuto-cerca">
+          <p class="solo-lettori" id="aiuto-cerca">Esempio: bici, vestiti, Via Roma.</p>
         </div>
 
-        <fieldset class="gruppo">
-          <legend>Cosa vuoi fare</legend>
-          <div class="chips" data-gruppo="azione"></div>
-        </fieldset>
-
-        <fieldset class="gruppo">
-          <legend>Che oggetto hai</legend>
-          <div class="chips" data-gruppo="categoria"></div>
-        </fieldset>
-
-        <fieldset class="gruppo">
-          <legend>In che zona</legend>
-          <div class="chips" data-gruppo="zona"></div>
-        </fieldset>
-
-        <div class="gruppo gruppo--preferiti">
-          <label class="chip">
-            <input type="checkbox" name="solo-preferiti">
-            <span>Solo i miei preferiti</span>
-          </label>
+        <div class="filtri__menu">
+          <div class="menu-filtro" data-gruppo="azione">
+            <span class="menu-filtro__etichetta" id="etichetta-azione">Cosa vuoi fare</span>
+            <button type="button" class="menu-filtro__bottone" aria-expanded="false" aria-controls="tendina-azione" aria-labelledby="etichetta-azione valore-azione">
+              <span class="menu-filtro__valore" id="valore-azione"></span>
+            </button>
+            <fieldset class="tendina" id="tendina-azione" hidden>
+              <legend class="solo-lettori">Cosa vuoi fare</legend>
+              <div class="opzioni" data-gruppo="azione"></div>
+            </fieldset>
+          </div>
+          <div class="menu-filtro" data-gruppo="categoria">
+            <span class="menu-filtro__etichetta" id="etichetta-categoria">Che oggetto</span>
+            <button type="button" class="menu-filtro__bottone" aria-expanded="false" aria-controls="tendina-categoria" aria-labelledby="etichetta-categoria valore-categoria">
+              <span class="menu-filtro__valore" id="valore-categoria"></span>
+            </button>
+            <fieldset class="tendina" id="tendina-categoria" hidden>
+              <legend class="solo-lettori">Che oggetto</legend>
+              <div class="opzioni" data-gruppo="categoria"></div>
+            </fieldset>
+          </div>
+          <div class="menu-filtro" data-gruppo="zona">
+            <span class="menu-filtro__etichetta" id="etichetta-zona">In che zona</span>
+            <button type="button" class="menu-filtro__bottone" aria-expanded="false" aria-controls="tendina-zona" aria-labelledby="etichetta-zona valore-zona">
+              <span class="menu-filtro__valore" id="valore-zona"></span>
+            </button>
+            <fieldset class="tendina" id="tendina-zona" hidden>
+              <legend class="solo-lettori">In che zona</legend>
+              <div class="opzioni" data-gruppo="zona"></div>
+            </fieldset>
+          </div>
         </div>
 
-        <button type="reset" class="bottone bottone--secondario">Azzera i filtri</button>
+        <!-- Casella vera, nascosta alla vista: si vede la pillola con il cuore -->
+        <label class="chip chip--preferiti">
+          <input type="checkbox" name="solo-preferiti">
+          <span><span class="chip__cuore" aria-hidden="true"></span>Preferiti<span class="solo-lettori"> (mostra solo i miei preferiti)</span></span>
+        </label>
       </form>
 
       <section id="risultati" class="risultati" aria-labelledby="titolo-risultati" tabindex="-1">
-        <h2 id="titolo-risultati">Punti della guida</h2>
+        <div class="risultati__testa">
+          <h2 id="titolo-risultati">Punti della guida</h2>
+          <p class="risultati__conteggio" id="conteggio-risultati" hidden></p>
+          <!-- Fuori dal form ma collegato con form="filtri": compare solo se c'è qualcosa da azzerare -->
+          <button type="reset" form="filtri" class="azzera" hidden>
+            <span aria-hidden="true">✕</span> Azzera i filtri
+          </button>
+        </div>
 
         <noscript>
           <p class="messaggio messaggio--errore">Per vedere l'elenco dei punti è necessario attivare JavaScript nel browser.</p>
         </noscript>
 
-        <!-- Compare solo quando ricerca e filtri non trovano nulla (gestito da script.js) -->
+        <!-- Compare solo quando ricerca e filtri non trovano nulla (gestito da filtri.js) -->
         <p id="nessun-risultato" class="vuoto" hidden></p>
 
         <ol id="elenco-punti" class="elenco" role="list">
@@ -150,6 +182,9 @@
         </div>
       </section>
     </div>
+
+    <!-- Finestra con tutti i dettagli di un punto: la riempie dettaglio.js quando si apre una scheda -->
+    <dialog id="dettaglio" class="dettaglio" aria-labelledby="dettaglio-titolo"></dialog>
 
     <section class="invito" aria-labelledby="titolo-invito">
       <div class="contenitore">

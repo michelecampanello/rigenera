@@ -41,8 +41,12 @@
   --font-testo: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 
   --raggio: 0.5rem;
-  --ombra: 4px 4px 0 var(--inchiostro);        /* ombra "a timbro", netta e senza sfumatura */
-  --ombra-alta: 7px 7px 0 var(--inchiostro);
+  /* Bordi e ombre hanno variabili proprie: nel tema chiaro sono color inchiostro,
+     nel tema scuro (14-tema-scuro.css) si ammorbidiscono per non abbagliare */
+  --tratto: var(--inchiostro);
+  --ombra-colore: var(--inchiostro);
+  --ombra: 4px 4px 0 var(--ombra-colore);       /* ombra "a timbro", netta e senza sfumatura */
+  --ombra-alta: 7px 7px 0 var(--ombra-colore);
   --spazio: 1rem;
   --larghezza-max: 74rem;
 

@@ -42,9 +42,12 @@
   <link rel="stylesheet" href="css/15-validazione.css">
   <!-- tema.js senza defer: applica il tema prima che la pagina venga disegnata -->
   <script src="js/tema.js"></script>
+  <!-- Script normali con defer: si eseguono in quest'ordine, ognuno usa le funzioni dei precedenti -->
   <script src="js/data.js" defer></script>
+  <script src="js/comune.js" defer></script>
   <script src="js/validazione.js" defer></script>
-  <script src="js/script.js" defer></script>
+  <script src="js/modulo.js" defer></script>
+  <script src="js/avvio.js" defer></script>
 </head>
 <body>
   <a class="salta" href="#contenuto">Vai al modulo</a>
@@ -63,7 +66,7 @@
       </nav>
       <button type="button" id="cambia-tema" class="tema" aria-pressed="false" hidden>
         <span class="tema__icona" aria-hidden="true"></span>
-        Tema scuro
+        <span class="tema__testo">Tema scuro</span>
       </button>
     </div>
   </header>
@@ -75,7 +78,7 @@
 
     <!--
       INVIO DEL MODULO
-      Il modulo è gestito da script.js: alla conferma il nuovo punto viene salvato
+      Il modulo è gestito da modulo.js: alla conferma il nuovo punto viene salvato
       nel localStorage del browser e compare subito nell'elenco di index.html.
     -->
     <noscript>
