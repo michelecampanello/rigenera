@@ -1,0 +1,16 @@
+# File di sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+
+# Cartelle generate e dipendenze
+node_modules/
+dist/
+
+# File sensibili e log
+.env
+*.log
