@@ -36,11 +36,11 @@ docs/img/                  → favicon, anteprima per i social, screenshot (comp
 
 | Persona | Contributo |
 |---|---|
-| **Michele Campanello** ([@michelecampanello](https://github.com/michelecampanello)) | Struttura HTML delle pagine, design system CSS (variabili e file numerati), schede e filtri dinamici con i conteggi, modulo di segnalazione e salvataggio, pubblicazione su GitHub Pages |
-| **Cristian** ([@cristiancipriani97-ux](https://github.com/cristiancipriani97-ux)) | Validazione in JavaScript del modulo di segnalazione, con i messaggi di errore vicino ai campi |
+| **Michele Campanello** ([@michelecampanello](https://github.com/michelecampanello)) | Struttura HTML delle pagine, design system CSS (variabili e file numerati), schede e filtri dinamici con i conteggi, filtri a menu a tendina, finestra con i dettagli di ogni punto, divisione del JavaScript in file per argomento, modulo di segnalazione e salvataggio, pubblicazione su GitHub Pages |
+| **Cristian Cipriani** ([@cristiancipriani97-ux](https://github.com/cristiancipriani97-ux)) | Validazione in JavaScript del modulo di segnalazione, con i messaggi di errore vicino ai campi |
 | **Raffaele Feola** ([@Rafeola](https://github.com/Rafeola)) | Ricerca testuale, messaggio "nessun risultato", preferiti, tema scuro, dati spostati in `data.js`, tag OpenGraph, README |
 
-Ognuno ha lavorato su un proprio branch; le modifiche sono entrate in `main` tramite pull request con revisione di un compagno.
+Ognuno ha lavorato sui propri branch e le modifiche sono entrate in `main` tramite pull request, così la cronologia dei commit mostra il contributo di tutti e tre.
 
 ---
 
